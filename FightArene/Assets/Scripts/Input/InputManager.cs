@@ -16,11 +16,12 @@ public static class InputManager
         if (isInitialized) return;
         
         inputAsset = new InputSystem_Actions();
-        playerMap = inputAsset.Player;
+        playerMap = inputAsset.PlayerMovement;
         
         actions = new PlayerActionContainer
         {
-            // Actions will be add here
+            jump = playerMap.FindAction("Jump"),
+            move = playerMap.FindAction("Move"),
         };
        
         
@@ -66,11 +67,8 @@ public static class InputManager
     public class PlayerActionContainer : IDisposable
     {
         public InputAction jump;
-        public InputAction moveRight;
-        public InputAction moveLeft;
-        public InputAction push;
-        public InputAction ghost;
-        public InputAction pressButton;
+        public InputAction move;
+        public InputAction sprint;
         
         private HashSet<InputAction> _allActions = new HashSet<InputAction>();
         

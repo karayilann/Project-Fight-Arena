@@ -1,27 +1,89 @@
 using Unity.Netcode;
 using UnityEngine;
 using Debug = Utilities.Debug;
-public class StartNetwork : MonoBehaviour
+
+namespace Network
 {
-    public void StartHost()
+    public class StartNetwork : MonoBehaviour
     {
-        Debug.Log("Starting Host...");
-        NetworkManager.Singleton.StartHost();
-    }
-    
-    public void StartClient()
-    {
-        Debug.Log("Starting Client...");
-        NetworkManager.Singleton.StartClient();
-    }
-    
-    public void PrintConnectedClients()
-    {
-        Debug.Log($"Connected Clients: {NetworkManager.Singleton.ConnectedClientsList.Count}");
-        foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
+        private void OnDestroy()
         {
-            Debug.Log($"ClientId: {client.ClientId}, PlayerObject: {client.PlayerObject}");
+            ShutdownNetwork();
+        }
+
+        private void OnApplicationQuit()
+        {
+            ShutdownNetwork();
+        }
+
+        public void StartHost()
+        {
+            if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+            {
+                Debug.Log("Network zaten aktif, kapatılıyor...");
+                ShutdownNetwork();
+            }
+
+            Debug.Log("Starting Host...");
+            
+            try
+            {
+                NetworkManager.Singleton.StartHost();
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"Host başlatılamadı: {e.Message}");
+            }
+        }
+        
+        public void StartClient()
+        {
+            if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+            {
+                Debug.Log("Network zaten aktif, kapatılıyor...");
+                ShutdownNetwork();
+            }
+
+            Debug.Log("Starting Client...");
+            
+            try
+            {
+                NetworkManager.Singleton.StartClient();
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"Client başlatılamadı: {e.Message}");
+            }
+        }
+
+        public void StopNetwork()
+        {
+            Debug.Log("Stopping Network...");
+            ShutdownNetwork();
+        }
+
+        private void ShutdownNetwork()
+        {
+            if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+            {
+                NetworkManager.Singleton.Shutdown();
+                Debug.Log("Network kapatıldı.");
+            }
+        }
+        
+        public void PrintConnectedClients()
+        {
+            if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsListening)
+            {
+                Debug.Log("Network aktif değil!");
+                return;
+            }
+
+            Debug.Log($"Connected Clients: {NetworkManager.Singleton.ConnectedClientsList.Count}");
+            foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
+            {
+                Debug.Log($"ClientId: {client.ClientId}, PlayerObject: {client.PlayerObject}");
+            }
         }
     }
-    
 }

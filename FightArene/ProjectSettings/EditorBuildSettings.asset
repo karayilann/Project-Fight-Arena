@@ -8,6 +8,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/CerenModelTest.unity
+    guid: 85bf3889af6eb014da6211a44b3498f7
+  - enabled: 1
+    path: Assets/Scenes/DilaScene.unity
+    guid: f90546dd65d979b45aca4ca2225cf12e
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
