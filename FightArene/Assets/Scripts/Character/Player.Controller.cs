@@ -1,9 +1,9 @@
 using Unity.Netcode;
 using UnityEngine;
 
-namespace Player
+namespace Character
 {
-    public class PlayerController : NetworkBehaviour
+    public partial class Player
     {
         [Header("Hareket Ayarları")]
         [SerializeField] private float moveSpeed = 5f;
@@ -25,24 +25,6 @@ namespace Player
         private bool _isGrounded;
         private bool _jumpRequested;
 
-        public override void OnNetworkSpawn()
-        {
-            base.OnNetworkSpawn();
-            
-            if (!IsOwner)
-            {
-                enabled = false;
-                return;
-            }
-            
-            SubscribeToInput();
-        }
-
-        public override void OnNetworkDespawn()
-        {
-            base.OnNetworkDespawn();
-            UnsubscribeFromInput();
-        }
 
         private void SubscribeToInput()
         {
@@ -64,7 +46,7 @@ namespace Player
             }
         }
 
-        private void Update()
+        private void ControllerUpdate()
         {
             if (!IsOwner) return;
 
@@ -75,57 +57,48 @@ namespace Player
 
         private void CheckGroundStatus()
         {
-            // CharacterController'ın built-in ground check'i
             _isGrounded = characterController.isGrounded;
             
-            // Ekstra raycast kontrolü (daha güvenilir)
             if (!_isGrounded)
             {
                 Vector3 rayStart = transform.position + Vector3.up * 0.1f;
                 _isGrounded = Physics.Raycast(rayStart, Vector3.down, groundCheckDistance + 0.1f, groundMask);
             }
 
-            // Yerdeyken velocity'yi sıfırla
             if (_isGrounded && _velocity.y < 0)
             {
-                _velocity.y = -2f; // Yere yapışmasını sağla
+                _velocity.y = -2f;
             }
         }
 
         private void HandleMovement()
         {
-            // Gravity uygula
             if (!_isGrounded)
             {
                 _velocity.y -= gravity * Time.deltaTime;
             }
 
-            // Jump işle
             if (_jumpRequested && _isGrounded)
             {
                 _velocity.y = jumpForce;
                 _jumpRequested = false;
             }
 
-            // Yatay hareket hesapla
             Vector3 moveDirection = CalculateMoveDirection();
             float currentSpeed = (inputHandler != null && inputHandler.IsSprintPressed) ? sprintSpeed : moveSpeed;
             Vector3 horizontalVelocity = moveDirection * currentSpeed;
 
-            // Toplam hareketi uygula
             Vector3 finalMovement = horizontalVelocity + new Vector3(0, _velocity.y, 0);
             characterController.Move(finalMovement * Time.deltaTime);
         }
 
         private Vector3 CalculateMoveDirection()
         {
-            // Input yoksa hareket yok
             if (_moveInput.magnitude < 0.01f)
             {
                 return Vector3.zero;
             }
 
-            // Kamera bazlı hareket yönü
             Vector3 forward = Vector3.forward;
             Vector3 right = Vector3.right;
 
@@ -134,7 +107,6 @@ namespace Player
                 forward = Camera.main.transform.forward;
                 right = Camera.main.transform.right;
                 
-                // Y eksenini sıfırla (sadece yatay hareket)
                 forward.y = 0f;
                 right.y = 0f;
                 
@@ -142,7 +114,6 @@ namespace Player
                 right.Normalize();
             }
 
-            // Hareket yönünü hesapla
             Vector3 direction = (forward * _moveInput.y + right * _moveInput.x).normalized;
             return direction;
         }
@@ -151,7 +122,6 @@ namespace Player
         {
             Vector3 moveDirection = CalculateMoveDirection();
             
-            // Hareket varsa karakteri döndür
             if (moveDirection.magnitude > 0.1f)
             {
                 Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
