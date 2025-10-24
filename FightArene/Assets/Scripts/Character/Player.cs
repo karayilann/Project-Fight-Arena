@@ -1,4 +1,5 @@
 using Unity.Netcode;
+using Utilities;
 
 namespace Character
 {
@@ -23,6 +24,28 @@ namespace Character
             UnsubscribeFromInput();
         }
 
+        private void SubscribeToInput()
+        {
+            if (inputHandler != null)
+            {
+                inputHandler.OnMovePerformed += HandleMoveInput;
+                inputHandler.OnMoveCanceled += HandleMoveCanceled;
+                inputHandler.OnJumpPerformed += HandleJump;
+                inputHandler.OnExtraFirePerformed += HandleExtraFire;
+                inputHandler.OnFirePerformed += HandleFire;
+            }
+        }
+
+        private void UnsubscribeFromInput()
+        {
+            if (inputHandler != null)
+            {
+                inputHandler.OnMovePerformed -= HandleMoveInput;
+                inputHandler.OnMoveCanceled -= HandleMoveCanceled;
+                inputHandler.OnJumpPerformed -= HandleJump;
+            }
+        }
+        
         void Update()
         {
             ControllerUpdate();

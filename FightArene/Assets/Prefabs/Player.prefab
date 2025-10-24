@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2512957114315917588}
   - component: {fileID: 1919863462620219074}
   - component: {fileID: 6820190029460171981}
-  - component: {fileID: 7363427286985677857}
+  - component: {fileID: 3019125548240217159}
   - component: {fileID: 425013279426193915}
   - component: {fileID: 452475855865229094}
   - component: {fileID: 4359330075113338077}
@@ -108,7 +108,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2509745282
+  GlobalObjectIdHash: 3728468455
   InScenePlacedSourceGlobalObjectIdHash: 2509745282
   DeferredDespawnTick: 0
   Ownership: 1
@@ -167,7 +167,7 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &7363427286985677857
+--- !u!114 &3019125548240217159
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -176,13 +176,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 489031174352640091}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96c597f6a29604048ae7873f0415bbaa, type: 3}
+  m_Script: {fileID: 11500000, guid: a995e448b6167b545ab51f62f2fb5f13, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Player.PlayerController
+  m_EditorClassIdentifier: Assembly-CSharp::Character.Player
   ShowTopMostFoldoutHeaderGroup: 1
   moveSpeed: 5
   sprintSpeed: 8
-  jumpForce: 5
+  jumpForce: 10
   rotationSpeed: 10
   gravity: 20
   groundCheckDistance: 0.2
@@ -191,6 +191,7 @@ MonoBehaviour:
     m_Bits: 64
   inputHandler: {fileID: 4359330075113338077}
   characterController: {fileID: 425013279426193915}
+  MaxHealth: 100
 --- !u!143 &425013279426193915
 CharacterController:
   m_ObjectHideFlags: 0

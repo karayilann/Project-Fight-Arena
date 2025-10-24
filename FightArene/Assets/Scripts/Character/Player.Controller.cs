@@ -24,28 +24,8 @@ namespace Character
         private Vector3 _velocity;
         private bool _isGrounded;
         private bool _jumpRequested;
-
-
-        private void SubscribeToInput()
-        {
-            if (inputHandler != null)
-            {
-                inputHandler.OnMovePerformed += HandleMoveInput;
-                inputHandler.OnMoveCanceled += HandleMoveCanceled;
-                inputHandler.OnJumpPerformed += HandleJump;
-            }
-        }
-
-        private void UnsubscribeFromInput()
-        {
-            if (inputHandler != null)
-            {
-                inputHandler.OnMovePerformed -= HandleMoveInput;
-                inputHandler.OnMoveCanceled -= HandleMoveCanceled;
-                inputHandler.OnJumpPerformed -= HandleJump;
-            }
-        }
-
+        
+        
         private void ControllerUpdate()
         {
             if (!IsOwner) return;

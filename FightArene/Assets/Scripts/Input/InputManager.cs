@@ -7,6 +7,7 @@ public static class InputManager
 {
     private static InputSystem_Actions inputAsset;
     public static InputActionMap playerMap = null;
+    public static InputActionMap combatMap = null;
     public static PlayerActionContainer actions = null;
     
     private static bool isInitialized;
@@ -17,11 +18,18 @@ public static class InputManager
         
         inputAsset = new InputSystem_Actions();
         playerMap = inputAsset.PlayerMovement;
+        combatMap = inputAsset.Combat;
         
         actions = new PlayerActionContainer
         {
             jump = playerMap.FindAction("Jump"),
             move = playerMap.FindAction("Move"),
+            sprint = playerMap.FindAction("Sprint"),
+            
+            // Combat Actions
+            fire = combatMap.FindAction("Fire"),
+            extraFire = combatMap.FindAction("ExtraFire")
+            
         };
        
         
@@ -45,6 +53,7 @@ public static class InputManager
     public static void Dispose()
     {
         playerMap?.Disable();
+        combatMap?.Disable();
         
         actions?.Disable();
         actions?.Dispose();
@@ -57,6 +66,7 @@ public static class InputManager
         }
         
         playerMap = null;
+        combatMap = null;
         actions = null;
         isInitialized = false;
         
@@ -69,6 +79,10 @@ public static class InputManager
         public InputAction jump;
         public InputAction move;
         public InputAction sprint;
+        
+        // Combat Map
+        public InputAction fire;
+        public InputAction extraFire;
         
         private HashSet<InputAction> _allActions = new HashSet<InputAction>();
         
