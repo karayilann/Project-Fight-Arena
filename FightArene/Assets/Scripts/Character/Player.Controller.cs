@@ -25,11 +25,10 @@ namespace Character
         private bool _isGrounded;
         private bool _jumpRequested;
         
-        
         private void ControllerUpdate()
         {
             if (!IsOwner) return;
-
+            
             CheckGroundStatus();
             HandleMovement();
             HandleRotation();
@@ -64,7 +63,21 @@ namespace Character
                 _jumpRequested = false;
             }
 
-            Vector3 moveDirection = CalculateMoveDirection();
+            Vector3 moveDirection = Vector3.zero;
+
+            if (_moveInput.sqrMagnitude >= 0.01f)
+            {
+                Vector3 forward = cinemachineCameraTarget.forward;
+                Vector3 right = cinemachineCameraTarget.right;
+
+                forward.y = 0f;
+                right.y = 0f;
+                forward.Normalize();
+                right.Normalize();
+
+                moveDirection = (forward * _moveInput.y + right * _moveInput.x).normalized;
+            }
+
             float currentSpeed = (inputHandler != null && inputHandler.IsSprintPressed) ? sprintSpeed : moveSpeed;
             Vector3 horizontalVelocity = moveDirection * currentSpeed;
 
@@ -72,44 +85,29 @@ namespace Character
             characterController.Move(finalMovement * Time.deltaTime);
         }
 
-        private Vector3 CalculateMoveDirection()
-        {
-            if (_moveInput.magnitude < 0.01f)
-            {
-                return Vector3.zero;
-            }
-
-            Vector3 forward = Vector3.forward;
-            Vector3 right = Vector3.right;
-
-            if (Camera.main != null)
-            {
-                forward = Camera.main.transform.forward;
-                right = Camera.main.transform.right;
-                
-                forward.y = 0f;
-                right.y = 0f;
-                
-                forward.Normalize();
-                right.Normalize();
-            }
-
-            Vector3 direction = (forward * _moveInput.y + right * _moveInput.x).normalized;
-            return direction;
-        }
-
         private void HandleRotation()
         {
-            Vector3 moveDirection = CalculateMoveDirection();
-            
-            if (moveDirection.magnitude > 0.1f)
+            if (_moveInput.sqrMagnitude >= 0.01f)
             {
-                Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-                transform.rotation = Quaternion.Slerp(
-                    transform.rotation, 
-                    targetRotation, 
-                    rotationSpeed * Time.deltaTime
-                );
+                Vector3 forward = cinemachineCameraTarget.forward;
+                Vector3 right = cinemachineCameraTarget.right;
+
+                forward.y = 0f;
+                right.y = 0f;
+                forward.Normalize();
+                right.Normalize();
+
+                Vector3 moveDirection = (forward * _moveInput.y + right * _moveInput.x).normalized;
+
+                if (moveDirection.sqrMagnitude > 0.01f)
+                {
+                    Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+                    transform.rotation = Quaternion.Slerp(
+                        transform.rotation,
+                        targetRotation,
+                        rotationSpeed * Time.deltaTime
+                    );
+                }
             }
         }
 

@@ -13,6 +13,7 @@ namespace Character
 
         public event Action<Vector2> OnMovePerformed;
         public event Action OnMoveCanceled;
+        public event Action<Vector2> OnLookPerformed;
         public event Action OnJumpPerformed;
         public event Action OnSprintStarted;
         public event Action OnSprintCanceled;
@@ -27,10 +28,9 @@ namespace Character
         #endregion
 
         public Vector2 MoveInput { get; private set; }
+        public Vector2 LookInput { get; private set; }
         public bool IsSprintPressed { get; private set; }
-
-        public bool isFirePressed => _inputActions.Combat.Fire.IsPressed();
-
+        
         private void Awake()
         {
             _inputActions = new InputSystem_Actions();
@@ -43,15 +43,20 @@ namespace Character
 
             _inputActions.PlayerMovement.Move.performed += OnMoveInputPerformed;
             _inputActions.PlayerMovement.Move.canceled += OnMoveInputCanceled;
-
+            
+            _inputActions.PlayerMovement.Look.performed += OnLookInputPerformed;
+            _inputActions.PlayerMovement.Look.canceled += OnLookInputCanceled;
+            
             _inputActions.PlayerMovement.Jump.performed += OnJumpInputPerformed;
 
             _inputActions.PlayerMovement.Sprint.started += OnSprintInputStarted;
             _inputActions.PlayerMovement.Sprint.canceled += OnSprintInputCanceled;
 
+            // Combat
             _inputActions.Combat.Fire.performed += FireOnperformed;
             _inputActions.Combat.ExtraFire.performed += ExtraFireOnperformed;
         }
+        
 
         private void OnDisable()
         {
@@ -61,21 +66,25 @@ namespace Character
             _inputActions.PlayerMovement.Move.performed -= OnMoveInputPerformed;
             _inputActions.PlayerMovement.Move.canceled -= OnMoveInputCanceled;
 
+            _inputActions.PlayerMovement.Look.performed -= OnLookInputPerformed;
+            _inputActions.PlayerMovement.Look.canceled -= OnLookInputCanceled;
+            
             _inputActions.PlayerMovement.Jump.performed -= OnJumpInputPerformed;
 
             _inputActions.PlayerMovement.Sprint.started -= OnSprintInputStarted;
             _inputActions.PlayerMovement.Sprint.canceled -= OnSprintInputCanceled;
-
+            
+            // Combat
             _inputActions.Combat.Fire.performed -= FireOnperformed;
             _inputActions.Combat.ExtraFire.performed -= ExtraFireOnperformed;
         }
-
+        
+        
         #region Input Callback Metodları
 
         private void OnMoveInputPerformed(InputAction.CallbackContext context)
         {
             MoveInput = context.ReadValue<Vector2>();
-            Debug.Log("OnMoveInputPerformed");
             OnMovePerformed?.Invoke(MoveInput);
         }
 
@@ -85,6 +94,18 @@ namespace Character
             OnMoveCanceled?.Invoke();
         }
 
+        private void OnLookInputPerformed(InputAction.CallbackContext context)
+        {
+            LookInput = context.ReadValue<Vector2>();
+            OnLookPerformed?.Invoke(LookInput);
+        }
+        
+        private void OnLookInputCanceled(InputAction.CallbackContext context)
+        {
+            LookInput = Vector2.zero;
+            OnLookPerformed?.Invoke(LookInput);
+        }
+        
         private void OnJumpInputPerformed(InputAction.CallbackContext context)
         {
             OnJumpPerformed?.Invoke();
@@ -107,13 +128,11 @@ namespace Character
 
         private void ExtraFireOnperformed(InputAction.CallbackContext obj)
         {
-            Debug.Log("ExtraFireOnperformed");
             OnExtraFirePerformed?.Invoke();
         }
 
         private void FireOnperformed(InputAction.CallbackContext obj)
         {
-            Debug.Log("FireOnperformed");
             OnFirePerformed?.Invoke();
         }
 

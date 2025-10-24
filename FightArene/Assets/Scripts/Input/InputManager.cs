@@ -25,6 +25,7 @@ public static class InputManager
             jump = playerMap.FindAction("Jump"),
             move = playerMap.FindAction("Move"),
             sprint = playerMap.FindAction("Sprint"),
+            look = playerMap.FindAction("Look"),
             
             // Combat Actions
             fire = combatMap.FindAction("Fire"),
@@ -79,6 +80,7 @@ public static class InputManager
         public InputAction jump;
         public InputAction move;
         public InputAction sprint;
+        public InputAction look;
         
         // Combat Map
         public InputAction fire;

@@ -1,11 +1,13 @@
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Debug = Utilities.Debug;
 
 namespace Network
 {
     public class StartNetwork : MonoBehaviour
     {
+        public GameObject networkCanvas;
         private void OnDestroy()
         {
             ShutdownNetwork();
@@ -29,6 +31,10 @@ namespace Network
             try
             {
                 NetworkManager.Singleton.StartHost();
+                if (NetworkManager.Singleton.IsListening)
+                {
+                    networkCanvas.SetActive(false);
+                }
             }
             catch (System.Exception e)
             {
@@ -49,6 +55,10 @@ namespace Network
             try
             {
                 NetworkManager.Singleton.StartClient();
+                if (NetworkManager.Singleton.IsListening)
+                {
+                    networkCanvas.SetActive(false);
+                }
             }
             catch (System.Exception e)
             {

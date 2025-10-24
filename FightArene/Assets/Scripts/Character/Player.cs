@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using Utilities;
 
@@ -14,10 +15,17 @@ namespace Character
                 enabled = false;
                 return;
             }
-            
-            SubscribeToInput();
+            PlayerInit();
         }
 
+        private void PlayerInit()
+        {
+            SubscribeToInput();
+            InitCombat();
+            InitUI();
+            InitCamera();
+        }
+        
         public override void OnNetworkDespawn()
         {
             base.OnNetworkDespawn();
@@ -43,6 +51,8 @@ namespace Character
                 inputHandler.OnMovePerformed -= HandleMoveInput;
                 inputHandler.OnMoveCanceled -= HandleMoveCanceled;
                 inputHandler.OnJumpPerformed -= HandleJump;
+                inputHandler.OnExtraFirePerformed -= HandleExtraFire;
+                inputHandler.OnFirePerformed -= HandleFire;
             }
         }
         
@@ -50,5 +60,6 @@ namespace Character
         {
             ControllerUpdate();
         }
+        
     }
 }
