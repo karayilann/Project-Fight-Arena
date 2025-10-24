@@ -16,7 +16,7 @@ namespace Managers
                 return;
             }
 
-            virtualCamera.Follow = player;
+            virtualCamera.Follow = cameraTarget;
             virtualCamera.LookAt = cameraTarget;
             
             Debug.Log($"Kamera {player.name} için ayarlandı");

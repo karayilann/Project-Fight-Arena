@@ -533,12 +533,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineThirdPersonFollow
   Damping: {x: 0.1, y: 0.5, z: 0.3}
-  ShoulderOffset: {x: 0.5, y: 1.46, z: 0}
+  ShoulderOffset: {x: 0.4, y: 1.6, z: 0}
   VerticalArmLength: 0.4
-  CameraSide: 0.5
+  CameraSide: 1
   CameraDistance: 2.99
   AvoidObstacles:
-    Enabled: 0
+    Enabled: 1
     CollisionFilter:
       serializedVersion: 2
       m_Bits: 1
@@ -567,7 +567,7 @@ MonoBehaviour:
       Owner: {fileID: 246790959}
       Enabled: 1
       Input:
-        InputAction: {fileID: -6214751729323632824, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+        InputAction: {fileID: 0}
         Gain: 1
         CancelDeltaTime: 0
       InputValue: 0
@@ -578,7 +578,7 @@ MonoBehaviour:
       Owner: {fileID: 246790959}
       Enabled: 1
       Input:
-        InputAction: {fileID: -6214751729323632824, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+        InputAction: {fileID: 0}
         Gain: -1
         CancelDeltaTime: 0
       InputValue: 0
@@ -599,7 +599,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62d54399b04b4fa48a73e121d4937dd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachinePanTilt
-  ReferenceFrame: 0
+  ReferenceFrame: 3
   RecenterTarget: 0
   PanAxis:
     Value: 0
