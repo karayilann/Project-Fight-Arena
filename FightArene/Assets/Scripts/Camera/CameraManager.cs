@@ -1,5 +1,6 @@
 using Unity.Cinemachine;
 using UnityEngine;
+using Debug = Utilities.Debug;
 
 namespace Managers
 {   
@@ -9,7 +10,7 @@ namespace Managers
 
         public void SetupCameraForPlayer(Transform player, Transform cameraTarget)
         {
-            Utilities.Debug.Log("Kamera ayarlanıyor...");
+            Debug.Log("Kamera ayarlanıyor...");
             if (virtualCamera == null)
             {
                 Debug.LogError("Virtual Camera referansı eksik!");

@@ -127,6 +127,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StandartGun
   gunSource: {fileID: -7417882321322274791}
   fireSound: {fileID: 8300000, guid: 1d53b4a17257a2f4c846174cda40bb0f, type: 3}
+  projectilePrefab: {fileID: 1304101384665562573, guid: 5e54a0858e57ed24e83da457dba07541, type: 3}
+  damage: 10
+  range: 50
+  firePoint: {fileID: 6387186868363167779}
 --- !u!82 &-7417882321322274791
 AudioSource:
   m_ObjectHideFlags: 0

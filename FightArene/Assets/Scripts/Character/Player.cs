@@ -4,7 +4,7 @@ using Utilities;
 
 namespace Character
 {
-    public partial class Player : NetworkBehaviour
+    public partial class Player : NetworkBehaviour,IDamageable
     {
         public override void OnNetworkSpawn()
         {
@@ -38,6 +38,7 @@ namespace Character
             {
                 inputHandler.OnMovePerformed += HandleMoveInput;
                 inputHandler.OnMoveCanceled += HandleMoveCanceled;
+                inputHandler.OnLookPerformed += HandleLookInput;
                 inputHandler.OnJumpPerformed += HandleJump;
                 inputHandler.OnExtraFirePerformed += HandleExtraFire;
                 inputHandler.OnFirePerformed += HandleFire;
@@ -50,6 +51,7 @@ namespace Character
             {
                 inputHandler.OnMovePerformed -= HandleMoveInput;
                 inputHandler.OnMoveCanceled -= HandleMoveCanceled;
+                inputHandler.OnLookPerformed -= HandleLookInput;
                 inputHandler.OnJumpPerformed -= HandleJump;
                 inputHandler.OnExtraFirePerformed -= HandleExtraFire;
                 inputHandler.OnFirePerformed -= HandleFire;

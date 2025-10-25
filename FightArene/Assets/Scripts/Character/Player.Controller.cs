@@ -37,23 +37,7 @@ namespace Character
 
         private float _cameraPitch = 0f;
         private float _yawOffset = 0f;
-
-        private void OnEnable()
-        {
-            inputHandler.OnMovePerformed += HandleMoveInput;
-            inputHandler.OnMoveCanceled += HandleMoveCanceled;
-            inputHandler.OnLookPerformed += HandleLookInput;
-            inputHandler.OnJumpPerformed += HandleJump;
-        }
-
-        private void OnDisable()
-        {
-            inputHandler.OnMovePerformed -= HandleMoveInput;
-            inputHandler.OnMoveCanceled -= HandleMoveCanceled;
-            inputHandler.OnLookPerformed -= HandleLookInput;
-            inputHandler.OnJumpPerformed -= HandleJump;
-        }
-
+        
         private void ControllerUpdate()
         {
             if (!IsOwner) return;
