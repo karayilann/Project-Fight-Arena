@@ -19,20 +19,9 @@ namespace Character
         
         void InitCombat()
         {
-            // Silah prefab kontrolü
             if (guns == null || guns.Count == 0 || guns[0] == null)
             {
                 Debug.LogError("No gun prefab assigned in Player guns list!");
-                return;
-            }
-            
-            // Eğer gun prefab'ında NetworkObject varsa hata ver ve devam etme
-            var prefabNetworkObj = guns[0].GetComponent<NetworkObject>();
-            if (prefabNetworkObj != null)
-            {
-                Debug.LogError("ERROR: Gun prefab '" + guns[0].name + "' has NetworkObject component! " +
-                    "Please open the prefab in Unity Editor and REMOVE the NetworkObject component. " +
-                    "Only Projectile should have NetworkObject, NOT the gun itself!");
                 return;
             }
             
@@ -43,7 +32,6 @@ namespace Character
         {
             var spawnedGun = Instantiate(guns[0], gunHolder);
             
-            // Local pozisyon ve rotasyonu sıfırla
             spawnedGun.transform.localPosition = Vector3.zero;
             spawnedGun.transform.localRotation = Quaternion.identity;
             
@@ -56,22 +44,18 @@ namespace Character
         [ServerRpc(RequireOwnership = false)]
         public void SpawnProjectileServerRpc(Vector3 spawnPos, Vector3 targetPos, float damage, float range)
         {
-            // Projectile prefab'ı burada al - her zaman aynı prefab kullanacağız
-            // Silahtan prefab referansı almak yerine, Player'da tutacağız
             if (_projectilePrefab == null)
             {
                 Debug.LogError("Projectile prefab is not assigned to Player!");
                 return;
             }
             
-            // Projectile'ı spawn et
             var bullet = Instantiate(_projectilePrefab, spawnPos, Quaternion.identity);
             var networkObject = bullet.GetComponent<NetworkObject>();
             
             if (networkObject != null)
             {
                 networkObject.Spawn();
-                // Initialize et
                 bullet.Initialize(spawnPos, targetPos, damage, range);
             }
             else

@@ -1,3 +1,4 @@
+using Character;
 using UnityEngine;
 using Debug = Utilities.Debug;
 
@@ -17,17 +18,14 @@ public class StandartGun : AGun
     
     private void SpawnProjectile()
     {
-        // Prefab kontrolü
         if (projectilePrefab == null)
         {
             Debug.LogError("Projectile Prefab is not assigned to StandartGun!");
             return;
         }
         
-        // Fire point yoksa gun'ın kendi pozisyonunu kullan
         Vector3 spawnPosition = firePoint != null ? firePoint.position : transform.position;
         
-        // Ekranın ortasından (crosshair'dan) raycast at
         Vector3 targetPosition;
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         
@@ -40,10 +38,8 @@ public class StandartGun : AGun
             targetPosition = ray.origin + ray.direction * range;
         }
         
-        // Projectile'ı spawn et (her zaman server'da spawn edilecek)
         SpawnProjectileServerRpc(spawnPosition, targetPosition);
         
-        // Ses efekti lokal olarak çal
         if (gunSource != null && fireSound != null)
         {
             gunSource.PlayOneShot(fireSound);
@@ -54,11 +50,9 @@ public class StandartGun : AGun
     
     private void SpawnProjectileServerRpc(Vector3 spawnPos, Vector3 targetPos)
     {
-        // Player'ın NetworkBehaviour'ından ServerRpc çağıracağız
-        var player = GetComponentInParent<Character.Player>();
-        if (player != null)
+        if (Player.Instance != null)
         {
-            player.SpawnProjectileServerRpc(spawnPos, targetPos, damage, range);
+            Player.Instance.SpawnProjectileServerRpc(spawnPos, targetPos, damage, range);
         }
     }
 

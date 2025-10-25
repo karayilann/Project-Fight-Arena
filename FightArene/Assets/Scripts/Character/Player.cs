@@ -4,7 +4,7 @@ using Utilities;
 
 namespace Character
 {
-    public partial class Player : NetworkBehaviour,IDamageable
+    public partial class Player : NetworkSingleton<Player>,IDamageable
     {
         public override void OnNetworkSpawn()
         {

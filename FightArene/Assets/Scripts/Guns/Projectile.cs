@@ -9,7 +9,7 @@ public class Projectile : NetworkBehaviour
     [SerializeField] private float damage = 10f;
     [SerializeField] private float range = 50f;
     [SerializeField] private float projectileSpeed = 20f;
-    [SerializeField] private float arcHeight = 5f; // Parabolik yay yüksekliği
+    [SerializeField] private float arcHeight = 5f;
     [SerializeField] private LayerMask hitLayers;
     
     [Header("Visual")]
@@ -23,9 +23,7 @@ public class Projectile : NetworkBehaviour
     private Tween movementTween;
     private Vector3 lastCheckPosition;
     
-    /// <summary>
-    /// Gun scriptinden çağrılacak initialize fonksiyonu
-    /// </summary>
+
     public void Initialize(Vector3 startPos, Vector3 targetPos, float damageAmount, float maxRange)
     {
         if (!IsServer && !IsHost)
@@ -38,13 +36,10 @@ public class Projectile : NetworkBehaviour
         
         transform.position = startPosition;
         
-        // Hedef mesafesini hesapla
         travelDistance = Vector3.Distance(startPosition, targetPosition);
         
-        // Range kontrolü
         if (travelDistance > range)
         {
-            // Hedef çok uzaksa, range'e göre yeni hedef belirle
             Vector3 direction = (targetPosition - startPosition).normalized;
             targetPosition = startPosition + direction * range;
             travelDistance = range;
@@ -52,7 +47,6 @@ public class Projectile : NetworkBehaviour
         
         isInitialized = true;
         
-        // Parabolik atışı başlat
         LaunchProjectile().Forget();
     }
     
@@ -61,27 +55,21 @@ public class Projectile : NetworkBehaviour
         if (!IsServer && !IsHost)
             return;
             
-        // Uçuş süresi hesapla
         float duration = travelDistance / projectileSpeed;
         
-        // Parabolik yol için ara noktalar oluştur
         Vector3 midPoint = (startPosition + targetPosition) / 2f;
-        midPoint.y += arcHeight; // Y ekseninde yükseklik ekle
+        midPoint.y += arcHeight;
         
-        // PrimeTween ile parabolik hareket
         var sequence = Sequence.Create();
         
-        // Ana hareket tweeni - Bezier curve ile parabolik yol
         movementTween = Tween.Custom(0f, 1f, duration, onValueChange: t =>
         {
             if (this == null || gameObject == null)
                 return;
                 
-            // Quadratic Bezier curve ile parabolik yol
             Vector3 position = CalculateBezierPoint(t, startPosition, midPoint, targetPosition);
             transform.position = position;
             
-            // Projektili hareket yönüne doğru döndür
             if (t < 0.99f)
             {
                 Vector3 nextPos = CalculateBezierPoint(t + 0.01f, startPosition, midPoint, targetPosition);
