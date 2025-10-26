@@ -2522,6 +2522,14 @@ PrefabInstance:
       propertyPath: spawnPoints.Array.data[1].transform
       value: 
       objectReference: {fileID: 1687010145}
+    - target: {fileID: 7690711340476460775, guid: cd7d73dc893418842aec89a89c1aa293, type: 3}
+      propertyPath: spawnPoints.Array.data[0].continuousSpawn
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7690711340476460775, guid: cd7d73dc893418842aec89a89c1aa293, type: 3}
+      propertyPath: spawnPoints.Array.data[1].continuousSpawn
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

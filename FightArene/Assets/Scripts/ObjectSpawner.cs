@@ -59,6 +59,7 @@ public class ObjectSpawner : NetworkBehaviour
         _isSpawning = true;
         _cancellationTokenSource = new CancellationTokenSource();
         SpawnRoutineAsync(_cancellationTokenSource.Token).Forget();
+        
         Debug.Log($"Spawning başlatıldı - {spawnPoints.Count} spawn point aktif");
     }
 
@@ -76,6 +77,8 @@ public class ObjectSpawner : NetworkBehaviour
         _isSpawning = false;
         Debug.Log("Spawning durduruldu");
     }
+
+
 
     private async UniTaskVoid SpawnRoutineAsync(CancellationToken token)
     {
@@ -99,15 +102,48 @@ public class ObjectSpawner : NetworkBehaviour
         for (int i = 0; i < maxObjectsPerSpawn; i++)
         {
             SpawnPoint point = GetRandomActiveSpawnPoint();
+            
             if (point != null && point.spawnableObjects.Count > 0)
             {
-                SpawnableObject objToSpawn = SelectObjectByChance(point);
+                SpawnableObject objToSpawn = point.continuousSpawn ? SelectObjectForContinuous(point) : SelectObjectByChance(point);
+                
                 if (objToSpawn != null)
                 {
                     SpawnObjectAtPoint(point, objToSpawn);
                 }
             }
         }
+    }
+    
+    private SpawnableObject SelectObjectForContinuous(SpawnPoint point)
+    {
+        if (point.spawnableObjects.Count == 0)
+            return null;
+
+        float totalChance = 0f;
+        foreach (var obj in point.spawnableObjects)
+        {
+            totalChance += obj.spawnChance;
+        }
+
+        if (totalChance <= 0f)
+        {
+            return point.spawnableObjects[0];
+        }
+
+        float randomValue = Random.Range(0f, totalChance);
+        float currentSum = 0f;
+
+        foreach (var obj in point.spawnableObjects)
+        {
+            currentSum += obj.spawnChance;
+            if (randomValue <= currentSum)
+            {
+                return obj;
+            }
+        }
+
+        return point.spawnableObjects[0];
     }
 
     private SpawnPoint GetRandomActiveSpawnPoint()
@@ -116,7 +152,9 @@ public class ObjectSpawner : NetworkBehaviour
 
         foreach (var point in spawnPoints)
         {
-            if (Random.value <= point.pointActiveChance && point.spawnableObjects.Count > 0)
+            bool shouldAdd = point.continuousSpawn || Random.value <= point.pointActiveChance;
+            
+            if (shouldAdd && point.spawnableObjects.Count > 0)
             {
                 validPoints.Add(point);
             }
@@ -261,113 +299,7 @@ public class ObjectSpawner : NetworkBehaviour
     }
 
     #endregion
-
-    #region Editor Gizmos
-
-    private void OnDrawGizmos()
-    {
-        if (!showGizmos) return;
-
-        for (int i = 0; i < spawnPoints.Count; i++)
-        {
-            var point = spawnPoints[i];
-            if (point.transform == null) continue;
-
-            Vector3 worldPos = point.transform.position;
-
-            Color pointColor = GetColorForIndex(i);
-            Gizmos.color = pointColor;
-
-            DrawCircle(worldPos, point.radius);
-
-            Gizmos.color = pointColor * 0.5f;
-            Gizmos.DrawLine(worldPos, worldPos + Vector3.up * spawnHeight);
-
-            Gizmos.color = pointColor;
-            DrawCircle(worldPos + Vector3.up * spawnHeight, point.radius * 0.3f);
-
-#if UNITY_EDITOR
-            if (showLabels)
-            {
-                Handles.Label(
-                    worldPos + Vector3.up * (spawnHeight + 1f),
-                    $"Point {i}\n{point.spawnableObjects.Count} obje"
-                );
-            }
-#endif
-        }
-    }
-
-    private void DrawCircle(Vector3 center, float radius)
-    {
-        int segments = 32;
-        float angleStep = 360f / segments;
-
-        Vector3 prevPoint = center + new Vector3(radius, 0, 0);
-
-        for (int i = 1; i <= segments; i++)
-        {
-            float angle = angleStep * i * Mathf.Deg2Rad;
-            Vector3 newPoint = center + new Vector3(
-                Mathf.Cos(angle) * radius,
-                0,
-                Mathf.Sin(angle) * radius
-            );
-
-            Gizmos.DrawLine(prevPoint, newPoint);
-            prevPoint = newPoint;
-        }
-    }
-
-    private Color GetColorForIndex(int index)
-    {
-        Color[] colors = new Color[]
-        {
-            Color.green,
-            Color.cyan,
-            Color.yellow,
-            Color.magenta,
-            new Color(1f, 0.5f, 0f),
-            new Color(0.5f, 0f, 1f),
-        };
-
-        return colors[index % colors.Length];
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        if (!showGizmos) return;
-
-        for (int i = 0; i < spawnPoints.Count; i++)
-        {
-            var point = spawnPoints[i];
-            if (point.transform == null) continue;
-
-            Vector3 worldPos = point.transform.position;
-
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(worldPos + Vector3.up * spawnHeight, 0.5f);
-
-#if UNITY_EDITOR
-            if (showLabels && point.spawnableObjects.Count > 0)
-            {
-                string objList = $"=== Point {i} ===\n";
-                foreach (var obj in point.spawnableObjects)
-                {
-                    objList += $"• {obj.objectType} ({obj.spawnChance}%)\n";
-                }
-
-                Handles.Label(
-                    worldPos + Vector3.up * (spawnHeight + 2f),
-                    objList
-                );
-            }
-#endif
-        }
-    }
-
-    #endregion
-
+    
     public override void OnNetworkDespawn()
     {
         StopSpawning();
@@ -400,5 +332,9 @@ public class ObjectSpawner : NetworkBehaviour
         public float radius = 5f;
         public List<SpawnableObject> spawnableObjects = new List<SpawnableObject>();
         [Range(0f, 1f)] public float pointActiveChance = 1f;
+        
+        [Header("Continuous Spawn")]
+        [Tooltip("Aktif olduğunda bu spawn point için chance kontrollerini atlar ve garantili spawn yapar")]
+        public bool continuousSpawn = false;
     }
 }
