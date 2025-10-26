@@ -24,12 +24,15 @@ public class StandartGun : AGun
 
     public override void Fire()
     {
-         if (Time.time < _nextFireTime)
-         {
-             return;
-         }
-
-         _nextFireTime = Time.time + 1f / Mathf.Max(0.0001f, spawnRate);
+        // TODO :  Will be fix later
+        
+         // if (Time.time < _nextFireTime)
+         // {
+         //     return;
+         // }
+         //
+         // _nextFireTime = Time.time + 1f / Mathf.Max(0.0001f, spawnRate);
+         Debug.Log("Standart Gun Fire Activated");
          SpawnProjectile();
     }
 
