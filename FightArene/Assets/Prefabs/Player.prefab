@@ -279,7 +279,6 @@ MonoBehaviour:
   gunHolder: {fileID: 2997097091531254785}
   guns:
   - {fileID: -7107463362374517954, guid: b496c01388a232a468c3a63d19f23801, type: 3}
-  _projectilePrefab: {fileID: 1304101384665562573, guid: 5e54a0858e57ed24e83da457dba07541, type: 3}
   moveSpeed: 5
   sprintSpeed: 8
   jumpForce: 10
@@ -459,7 +458,7 @@ Transform:
   m_GameObject: {fileID: 6895852673638488548}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.134, y: 0.442, z: 0.356}
+  m_LocalPosition: {x: 0, y: 0.574, z: 0.168}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -569,7 +568,7 @@ Transform:
   m_GameObject: {fileID: 8101238229101273971}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.502}
+  m_LocalPosition: {x: 0, y: 0, z: 0.73}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

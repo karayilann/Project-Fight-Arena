@@ -157,6 +157,9 @@ MonoBehaviour:
   range: 50
   projectileSpeed: 20
   arcHeight: 1
+  hitLayers:
+    serializedVersion: 2
+    m_Bits: 0
   impactEffect: {fileID: 0}
   trailRenderer: {fileID: 0}
 --- !u!114 &839124917784037173
