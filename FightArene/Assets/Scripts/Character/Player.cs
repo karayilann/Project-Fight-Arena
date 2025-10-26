@@ -29,7 +29,6 @@ namespace Character
                 
         void Update()
         {
-            Debug.Log("Health: " + Health);
             ControllerUpdate();
         }
         

@@ -1,4 +1,3 @@
-using System;
 using Character;
 using UnityEngine;
 using Debug = Utilities.Debug;
@@ -11,6 +10,11 @@ public class StandartGun : AGun
     [SerializeField] private float range = 50f;
     [SerializeField] private Transform firePoint;
 
+    [Header("Spawn Rate")]
+    [Tooltip("Shots per second")]
+    [SerializeField] private float spawnRate = 2f;
+    private float _nextFireTime = .2f;
+
     private Player _player;
 
     private void Awake()
@@ -20,7 +24,13 @@ public class StandartGun : AGun
 
     public override void Fire()
     {
-        SpawnProjectile();
+         if (Time.time < _nextFireTime)
+         {
+             return;
+         }
+
+         _nextFireTime = Time.time + 1f / Mathf.Max(0.0001f, spawnRate);
+         SpawnProjectile();
     }
 
     private void SpawnProjectile()
@@ -30,30 +40,37 @@ public class StandartGun : AGun
         Vector3 targetPosition;
         var ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 
-        var raycast = Physics.Raycast(ray, out RaycastHit hit, range);
-        if (hit.collider != null && hit.collider.gameObject != _player.gameObject)
+        if (Physics.Raycast(ray, out RaycastHit hit, range))
         {
-            targetPosition = hit.point;
-        }
-        else if (hit.collider != null && hit.collider.gameObject != _player.gameObject)
-        {
-            Debug.Log("Hit self, ignoring.");
-            targetPosition = Vector3.zero;
+            if (hit.collider != null && hit.collider.gameObject != _player.gameObject)
+            {
+                targetPosition = hit.point;
+            }
+            else if (hit.collider != null && hit.collider.gameObject == _player.gameObject)
+            {
+                Debug.Log("Hit self, ignoring.");
+                targetPosition = Vector3.zero;
+            }
+            else
+            {
+                targetPosition = ray.origin + ray.direction * range;
+            }
         }
         else
         {
             targetPosition = ray.origin + ray.direction * range;
         }
 
-        if(targetPosition == Vector3.zero)
+        if (targetPosition == Vector3.zero)
         {
             Debug.Log("No valid target found, aborting projectile spawn.");
             return;
         }
-        
+
         SpawnProjectileServerRpc(spawnPosition, targetPosition);
-       
-        gunSource.PlayOneShot(fireSound);
+
+        if (gunSource != null && fireSound != null)
+            gunSource.PlayOneShot(fireSound);
     }
 
     private void SpawnProjectileServerRpc(Vector3 spawnPos, Vector3 targetPos)
