@@ -70,6 +70,7 @@ namespace Character
         private void HandleFire()
         {
             _currentGun?.Fire();
+            Debug.Log("HandleFire called.");
         }
 
         private void HandleExtraFire()

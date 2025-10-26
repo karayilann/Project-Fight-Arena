@@ -140,7 +140,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &7430262224337536063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,6 +180,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Collectable
   ShowTopMostFoldoutHeaderGroup: 1
   type: 1
-  amount: 1
-  rb: {fileID: 3273090619136314215}
-  col: {fileID: 6847147135712084743}

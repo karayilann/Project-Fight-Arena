@@ -163,7 +163,7 @@ MonoBehaviour:
   damage: 10
   range: 50
   firePoint: {fileID: 2144988228111760883}
-  spawnRate: 0.2
+  spawnRate: 0
 --- !u!82 &-7417882321322274791
 AudioSource:
   m_ObjectHideFlags: 0

@@ -1,0 +1,152 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6206030989818987706
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7478962365093928410}
+  - component: {fileID: 506195094625093199}
+  - component: {fileID: 121609404029048954}
+  - component: {fileID: 7287457385657586676}
+  - component: {fileID: 3640032479476386851}
+  - component: {fileID: 7690711340476460775}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 8418204508859773708, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7478962365093928410
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6206030989818987706}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &506195094625093199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6206030989818987706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea87f50f59bf8cd4c82b7fe8921742d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Managers.CameraManager
+  virtualCamera: {fileID: 0}
+--- !u!114 &121609404029048954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6206030989818987706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27d4420b74681aa49a035e745fe2eb50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerRequirements
+  crosshair: {fileID: 0}
+--- !u!114 &7287457385657586676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6206030989818987706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 3518274714
+  InScenePlacedSourceGlobalObjectIdHash: 2487643428
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
+--- !u!114 &3640032479476386851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6206030989818987706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 003e8cab732ecfc448c4e3f98666322f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkObjectPool
+  ShowTopMostFoldoutHeaderGroup: 1
+  poolConfigs:
+  - type: 0
+    prefab: {fileID: 135443001273883882, guid: 5e54a0858e57ed24e83da457dba07541, type: 3}
+    initialSize: 30
+    maxSize: 100
+    autoExpand: 1
+  - type: 3
+    prefab: {fileID: 3711587695198765334, guid: 69b12c2f56f41bc4bb7d77f069f595ab, type: 3}
+    initialSize: 30
+    maxSize: 100
+    autoExpand: 1
+  - type: 2
+    prefab: {fileID: 3711587695198765334, guid: b9f137e1f2235e949aa8a19ab637bf37, type: 3}
+    initialSize: 30
+    maxSize: 100
+    autoExpand: 1
+--- !u!114 &7690711340476460775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6206030989818987706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff2f04a47c632ce4d8b88eb3ec4d7eeb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectSpawner
+  ShowTopMostFoldoutHeaderGroup: 1
+  spawnPoints:
+  - transform: {fileID: 0}
+    radius: 0.5
+    spawnableObjects:
+    - objectType: 3
+      spawnChance: 100
+      randomRotation: 1
+    pointActiveChance: 1
+  - transform: {fileID: 0}
+    radius: 0.5
+    spawnableObjects:
+    - objectType: 2
+      spawnChance: 100
+      randomRotation: 1
+    pointActiveChance: 1
+  spawnInterval: 2
+  maxObjectsPerSpawn: 1
+  spawnHeight: 10
+  autoStart: 1
+  showGizmos: 1
+  showLabels: 1
