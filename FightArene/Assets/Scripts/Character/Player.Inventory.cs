@@ -14,21 +14,17 @@ namespace Character
             OnCollectableCountChanged(0, collectableCount.Value);
         }
 
-        private void OnDestroy()
-        {
-            collectableCount.OnValueChanged -= OnCollectableCountChanged;
-        }
-
         private void OnCollectableCountChanged(int previous, int current)
         {
-           Debug.Log("Collectable Count Updated: " + current);
+            Debug.Log("Collectable Count Updated: " + current);
         }
 
         private void OnCollisionEnter(Collision other)
         {
             if (!IsOwner) return;
 
-            if (other.gameObject.TryGetComponent<NetworkObject>(out var netObj) && other.gameObject.TryGetComponent<Collectable>(out var collectable))
+            if (other.gameObject.TryGetComponent<NetworkObject>(out var netObj) &&
+                other.gameObject.TryGetComponent<Collectable>(out var collectable))
             {
                 RequestPickupServerRpc(netObj.NetworkObjectId);
             }
@@ -44,11 +40,16 @@ namespace Character
                 var collectable = netObj.GetComponent<Collectable>();
                 if (collectable == null) return;
 
-                collectableCount.Value += collectable.amount;
-                Debug.Log($"Picked {collectable.type} x{collectable.amount}. Total: {collectableCount.Value}");
+                collectableCount.Value += 1;
+                Debug.Log($"Picked {collectable.type} x{1}. Total: {collectableCount.Value}");
 
                 netObj.Despawn(true);
             }
+        }
+
+        private void OnDestroy()
+        {
+            collectableCount.OnValueChanged -= OnCollectableCountChanged;
         }
     }
 }
