@@ -1,5 +1,4 @@
 using Unity.Netcode;
-using UnityEngine;
 using Debug = Utilities.Debug;
 
 namespace Character
@@ -19,32 +18,19 @@ namespace Character
             Debug.Log("Collectable Count Updated: " + current);
         }
 
-        private void OnCollisionEnter(Collision other)
-        {
-            if (!IsOwner) return;
-
-            if (other.gameObject.TryGetComponent<NetworkObject>(out var netObj) &&
-                other.gameObject.TryGetComponent<Collectable>(out var collectable))
-            {
-                RequestPickupServerRpc(netObj.NetworkObjectId);
-            }
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        private void RequestPickupServerRpc(ulong collectableNetId, ServerRpcParams rpcParams = default)
+        [ServerRpc(RequireOwnership = true)]
+        public void RequestPickupServerRpc(ulong collectableNetId, ServerRpcParams rpcParams = default)
         {
             if (NetworkManager.Singleton == null) return;
 
-            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(collectableNetId, out var netObj))
-            {
-                var collectable = netObj.GetComponent<Collectable>();
-                if (collectable == null) return;
+            if (!NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(collectableNetId, out var netObj)) return;
+            var collectable = netObj.GetComponent<Collectable>();
+            if (collectable == null) return;
 
-                collectableCount.Value += 1;
-                Debug.Log($"Picked {collectable.type} x{1}. Total: {collectableCount.Value}");
+            collectableCount.Value += 1;
+            Debug.Log($"Picked {collectable.type} x{1}. Total: {collectableCount.Value}");
 
-                netObj.Despawn(true);
-            }
+            netObj.Despawn(true);
         }
 
         private void OnDestroy()

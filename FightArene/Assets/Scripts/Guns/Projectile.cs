@@ -11,6 +11,7 @@ public class Projectile : PooledNetworkObject
     [SerializeField] private float range = 50f;
     [SerializeField] private float projectileSpeed = 20f;
     [SerializeField] private float arcHeight = 5f;
+    [SerializeField] private LayerMask hitLayers;
 
     [Header("Visual")]
     [SerializeField] private GameObject impactEffect;
@@ -143,6 +144,9 @@ public class Projectile : PooledNetworkObject
         if (_hitOccurred)
             return;
 
+        if ((hitLayers.value & (1 << other.gameObject.layer)) == 0)
+            return;
+        
         _hitOccurred = true;
 
         if (other.collider.TryGetComponent<IDamageable>(out var damageable))
