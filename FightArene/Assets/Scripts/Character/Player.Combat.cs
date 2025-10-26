@@ -11,9 +11,6 @@ namespace Character
         private AGun _currentGun = null;
         public Transform gunHolder;
         public List<AGun> guns;
-        
-        private static Projectile _projectilePrefab => PlayerRequirements.Instance.projectilePrefab;
-        
         private List<AGun> _spawnedGuns = new List<AGun>();
         
         void InitCombat()
@@ -39,32 +36,31 @@ namespace Character
             
             Debug.Log("Gun Equipped: " + _currentGun.name);
         }
-        
-        
-        
-        
-        
+
         [ServerRpc(RequireOwnership = false)]
         public void SpawnProjectileServerRpc(Vector3 spawnPos, Vector3 targetPos)
         {
-            if (_projectilePrefab == null)
+            NetworkObject projectileNetObj = NetworkObjectPool.Instance.Spawn(
+                PoolObjectType.Projectile,
+                spawnPos,
+                Quaternion.identity
+            );
+            
+            if (projectileNetObj == null)
             {
-                Debug.LogError("Projectile prefab is not assigned to Player!");
+                Debug.LogError("Failed to spawn projectile from pool!");
                 return;
             }
             
-            var bullet = Instantiate(_projectilePrefab, spawnPos, Quaternion.identity);
-            var networkObject = bullet.GetComponent<NetworkObject>();
-            
-            if (networkObject != null)
+            if (projectileNetObj.TryGetComponent<Projectile>(out var projectile))
             {
-                networkObject.Spawn();
-                bullet.Initialize(spawnPos, targetPos);
+                projectile.Initialize(spawnPos, targetPos);
+                Debug.Log("Projectile spawned from pool and initialized!");
             }
             else
             {
-                Debug.LogError("Projectile prefab doesn't have NetworkObject component!");
-                Destroy(bullet.gameObject);
+                Debug.LogError("Spawned object doesn't have Projectile component!");
+                NetworkObjectPool.Instance.Despawn(projectileNetObj);
             }
         }
         
@@ -74,15 +70,12 @@ namespace Character
         private void HandleFire()
         {
             _currentGun?.Fire();
-            
         }
 
         private void HandleExtraFire()
         {
             _currentGun?.ExtraFire();
-            
         }
-
         
         #endregion
     }

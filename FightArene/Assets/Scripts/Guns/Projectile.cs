@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 using PrimeTween;
 using Debug = Utilities.Debug;
 
-public class Projectile : NetworkBehaviour
+public class Projectile : PooledNetworkObject
 {
     [Header("Projectile Settings")]
     [SerializeField] private float damage = 10f;
@@ -24,6 +24,41 @@ public class Projectile : NetworkBehaviour
     private Vector3 _lastCheckPosition;
     private bool _hitOccurred;
 
+    public override void OnSpawnFromPool()
+    {
+        base.OnSpawnFromPool();
+        
+        _isInitialized = false;
+        _hitOccurred = false;
+        
+        if (_movementTween.isAlive)
+        {
+            _movementTween.Stop();
+        }
+        
+        if (trailRenderer != null)
+        {
+            trailRenderer.Clear();
+        }
+    }
+
+    public override void OnReturnToPool()
+    {
+        base.OnReturnToPool();
+        
+        if (_movementTween.isAlive)
+        {
+            _movementTween.Stop();
+        }
+        
+        if (trailRenderer != null)
+        {
+            trailRenderer.Clear();
+        }
+        
+        _isInitialized = false;
+        _hitOccurred = false;
+    }
 
     public void Initialize(Vector3 startPos, Vector3 targetPos)
     {
@@ -102,8 +137,13 @@ public class Projectile : NetworkBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
+        if (!IsServer && !IsHost)
+            return;
+
         if (_hitOccurred)
             return;
+
+        _hitOccurred = true;
 
         if (other.collider.TryGetComponent<IDamageable>(out var damageable))
         {
@@ -134,15 +174,7 @@ public class Projectile : NetworkBehaviour
             trailRenderer.Clear();
         }
 
-        if (NetworkObject != null && NetworkObject.IsSpawned)
-        {
-            NetworkObject.Despawn(false);
-            Destroy(gameObject, 0.1f);
-        }
-        else if(gameObject != null)
-        {
-            Destroy(gameObject);
-        }
+        ReturnToPool();
     }
 
     public override void OnNetworkDespawn()
