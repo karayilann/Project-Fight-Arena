@@ -6,7 +6,6 @@ public class StandartGun : AGun
 {
     public AudioSource gunSource;
     public AudioClip fireSound;
-    public Projectile projectilePrefab;
     [SerializeField] private float damage = 10f;
     [SerializeField] private float range = 50f;
     [SerializeField] private Transform firePoint;
@@ -18,16 +17,10 @@ public class StandartGun : AGun
     
     private void SpawnProjectile()
     {
-        if (projectilePrefab == null)
-        {
-            Debug.LogError("Projectile Prefab is not assigned to StandartGun!");
-            return;
-        }
-        
         Vector3 spawnPosition = firePoint != null ? firePoint.position : transform.position;
         
         Vector3 targetPosition;
-        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        var ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         
         if (Physics.Raycast(ray, out RaycastHit hit, range))
         {
@@ -40,19 +33,14 @@ public class StandartGun : AGun
         
         SpawnProjectileServerRpc(spawnPosition, targetPosition);
         
-        if (gunSource != null && fireSound != null)
-        {
-            gunSource.PlayOneShot(fireSound);
-        }
-        
-        Debug.Log("Standart Gun Fired");
+        gunSource.PlayOneShot(fireSound);
     }
     
     private void SpawnProjectileServerRpc(Vector3 spawnPos, Vector3 targetPos)
     {
         if (Player.Instance != null)
         {
-            Player.Instance.SpawnProjectileServerRpc(spawnPos, targetPos, damage, range);
+            Player.Instance.SpawnProjectileServerRpc(spawnPos, targetPos);
         }
     }
 

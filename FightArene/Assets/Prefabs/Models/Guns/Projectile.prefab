@@ -15,8 +15,9 @@ GameObject:
   - component: {fileID: 7554072425887147820}
   - component: {fileID: 1304101384665562573}
   - component: {fileID: 839124917784037173}
+  - component: {fileID: 1621596996695358042}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: Projectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -155,10 +156,7 @@ MonoBehaviour:
   damage: 10
   range: 50
   projectileSpeed: 20
-  arcHeight: 5
-  hitLayers:
-    serializedVersion: 2
-    m_Bits: 128
+  arcHeight: 1
   impactEffect: {fileID: 0}
   trailRenderer: {fileID: 0}
 --- !u!114 &839124917784037173
@@ -207,3 +205,30 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!54 &1621596996695358042
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 135443001273883882}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

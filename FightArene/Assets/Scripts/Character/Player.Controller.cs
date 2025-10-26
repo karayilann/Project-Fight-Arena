@@ -37,7 +37,8 @@ namespace Character
 
         private float _cameraPitch = 0f;
         private float _yawOffset = 0f;
-        
+
+
         private void ControllerUpdate()
         {
             if (!IsOwner) return;

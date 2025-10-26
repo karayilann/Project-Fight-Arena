@@ -26,6 +26,13 @@ namespace Character
             InitCamera();
         }
         
+                
+        void Update()
+        {
+            Debug.Log("Health: " + Health);
+            ControllerUpdate();
+        }
+        
         public override void OnNetworkDespawn()
         {
             base.OnNetworkDespawn();
@@ -56,11 +63,6 @@ namespace Character
                 inputHandler.OnExtraFirePerformed -= HandleExtraFire;
                 inputHandler.OnFirePerformed -= HandleFire;
             }
-        }
-        
-        void Update()
-        {
-            ControllerUpdate();
         }
         
     }

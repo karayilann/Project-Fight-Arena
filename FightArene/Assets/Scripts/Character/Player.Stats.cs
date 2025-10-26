@@ -5,15 +5,15 @@ namespace Character
 {
     public partial class Player
     {
-        private readonly NetworkVariable<float> _health = new(100f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-        private readonly NetworkVariable<bool> _isDead = new(false, NetworkVariableReadPermission.Everyone);
-
+        private NetworkVariable<float> _health = new(100f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        private NetworkVariable<bool> _isDead = new(false, NetworkVariableReadPermission.Everyone);
+        
         public float Health
         {
             get => _health.Value;
             private set
             {
-                if (IsOwner)
+                if (IsServer)
                 {
                     _health.Value = Mathf.Clamp(value, 0f, 100f);
                 }
@@ -22,10 +22,16 @@ namespace Character
 
         public void TakeDamage(float damage)
         {
-            if (!IsOwner || _isDead.Value) return;
+            TakeDamageServerRpc(damage);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void TakeDamageServerRpc(float damage)
+        {
+            if (_isDead.Value) return;
 
             Health -= damage;
-            Debug.Log($"Player took {damage} damage. Current Health: {Health}");
+            Debug.Log($"Player {OwnerClientId} took {damage} damage. Current Health: {Health}");
 
             if (Health <= 0)
             {
@@ -35,13 +41,9 @@ namespace Character
 
         private void Die()
         {
-            Debug.Log("Player has died.");
-            DieServerRpc();
-        }
-
-        [ServerRpc]
-        private void DieServerRpc()
-        {
+            if (!IsServer) return;
+            
+            Debug.Log($"Player {OwnerClientId} has died.");
             _isDead.Value = true;
         }
 

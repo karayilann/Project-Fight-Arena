@@ -12,8 +12,7 @@ namespace Character
         public Transform gunHolder;
         public List<AGun> guns;
         
-        [Header("Projectile")]
-        [SerializeField] private Projectile _projectilePrefab; // Projectile prefab referansı
+        private static Projectile _projectilePrefab => PlayerRequirements.Instance.projectilePrefab;
         
         private List<AGun> _spawnedGuns = new List<AGun>();
         
@@ -41,8 +40,12 @@ namespace Character
             Debug.Log("Gun Equipped: " + _currentGun.name);
         }
         
+        
+        
+        
+        
         [ServerRpc(RequireOwnership = false)]
-        public void SpawnProjectileServerRpc(Vector3 spawnPos, Vector3 targetPos, float damage, float range)
+        public void SpawnProjectileServerRpc(Vector3 spawnPos, Vector3 targetPos)
         {
             if (_projectilePrefab == null)
             {
@@ -56,7 +59,7 @@ namespace Character
             if (networkObject != null)
             {
                 networkObject.Spawn();
-                bullet.Initialize(spawnPos, targetPos, damage, range);
+                bullet.Initialize(spawnPos, targetPos);
             }
             else
             {
