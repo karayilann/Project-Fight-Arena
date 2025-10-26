@@ -7,7 +7,6 @@ public abstract class PooledNetworkObject : NetworkBehaviour
     /// </summary>
     public virtual void OnSpawnFromPool()
     {
-        // Reset logic buraya
     }
 
     /// <summary>
@@ -15,7 +14,6 @@ public abstract class PooledNetworkObject : NetworkBehaviour
     /// </summary>
     public virtual void OnReturnToPool()
     {
-        // Cleanup logic buraya
     }
 
     /// <summary>

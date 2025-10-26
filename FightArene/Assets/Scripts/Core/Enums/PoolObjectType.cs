@@ -3,5 +3,7 @@
 public enum PoolObjectType
 {
     Projectile,
-    Enemy,
+    Carrot,
+    Bamboo,
+    Cone,
 }

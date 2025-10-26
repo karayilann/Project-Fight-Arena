@@ -36,7 +36,7 @@ namespace Character
             
             Debug.Log("Gun Equipped: " + _currentGun.name);
         }
-
+        
         [ServerRpc(RequireOwnership = false)]
         public void SpawnProjectileServerRpc(Vector3 spawnPos, Vector3 targetPos)
         {

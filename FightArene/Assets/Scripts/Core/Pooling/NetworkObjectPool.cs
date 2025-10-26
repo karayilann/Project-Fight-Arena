@@ -5,7 +5,6 @@ using Debug = Utilities.Debug;
 
 public class NetworkObjectPool : NetworkSingleton<NetworkObjectPool>
 {
-
     [Header("Pool Configurations")]
     [SerializeField] private List<PoolConfig> poolConfigs = new List<PoolConfig>();
     

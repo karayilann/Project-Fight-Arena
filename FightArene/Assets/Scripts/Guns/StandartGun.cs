@@ -75,7 +75,6 @@ public class StandartGun : AGun
 
     private void SpawnProjectileServerRpc(Vector3 spawnPos, Vector3 targetPos)
     {
-        
         if (Player.Instance != null)
         {
             Player.Instance.SpawnProjectileServerRpc(spawnPos, targetPos);
