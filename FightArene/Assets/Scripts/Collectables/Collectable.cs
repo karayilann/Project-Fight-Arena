@@ -43,7 +43,6 @@ public class Collectable : PooledNetworkObject
     {
         if (other.gameObject.CompareTag("Ground") && !_grounded)
         {
-            Debug.Log("Collectable hit the ground.");
             _grounded = true;
 
             _groundCts = new CancellationTokenSource();

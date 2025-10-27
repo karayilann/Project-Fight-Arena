@@ -6,4 +6,6 @@ public enum PoolObjectType
     Carrot,
     Bamboo,
     Cone,
+    Magnet,
+    Shield,
 }
