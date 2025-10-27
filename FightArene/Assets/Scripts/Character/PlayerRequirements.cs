@@ -5,5 +5,14 @@ public class PlayerRequirements : MonoSingleton<PlayerRequirements>
 {
     [Header("UI Elements")]
     public Image crosshair;
+
+    [Header("Skill UI")] 
+    public Image armorImage;
+    public Image armorTimer;
+    public Image armorBackground;
+    
+    public Image magnetImage;
+    public Image magnetTimer;
+    public Image magnetBackground;
     
 }

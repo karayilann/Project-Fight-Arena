@@ -17,6 +17,8 @@ namespace Character
         public event Action OnJumpPerformed;
         public event Action OnSprintStarted;
         public event Action OnSprintCanceled;
+        public event Action OnArmorSelected;
+        public event Action OnMagnetSelected;
 
         #endregion
 
@@ -51,12 +53,15 @@ namespace Character
 
             _inputActions.PlayerMovement.Sprint.started += OnSprintInputStarted;
             _inputActions.PlayerMovement.Sprint.canceled += OnSprintInputCanceled;
+            
+            _inputActions.PlayerMovement.Armor.performed += OnArmorInputPerformed;
+            _inputActions.PlayerMovement.Magnet.performed += OnMagnetInputPerformed;
 
             // Combat
             _inputActions.Combat.Fire.performed += FireOnperformed;
             _inputActions.Combat.ExtraFire.performed += ExtraFireOnperformed;
         }
-        
+
 
         private void OnDisable()
         {
@@ -122,7 +127,17 @@ namespace Character
             IsSprintPressed = false;
             OnSprintCanceled?.Invoke();
         }
+        
+        private void OnMagnetInputPerformed(InputAction.CallbackContext obj)
+        {
+            OnMagnetSelected?.Invoke();
+        }
 
+        private void OnArmorInputPerformed(InputAction.CallbackContext obj)
+        {
+            OnArmorSelected?.Invoke();
+        }
+        
         // Combat input callbacks
 
 

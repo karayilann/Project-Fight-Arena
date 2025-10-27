@@ -1,6 +1,4 @@
-using System;
-using Unity.Netcode;
-using Utilities;
+
 
 namespace Character
 {
@@ -27,7 +25,6 @@ namespace Character
             InitInventory();
         }
         
-                
         void Update()
         {
             ControllerUpdate();
@@ -49,6 +46,8 @@ namespace Character
                 inputHandler.OnJumpPerformed += HandleJump;
                 inputHandler.OnExtraFirePerformed += HandleExtraFire;
                 inputHandler.OnFirePerformed += HandleFire;
+                inputHandler.OnMagnetSelected += HandleMagnetSelected;
+                inputHandler.OnArmorSelected += HandleArmorSelected;
             }
         }
 
@@ -62,6 +61,8 @@ namespace Character
                 inputHandler.OnJumpPerformed -= HandleJump;
                 inputHandler.OnExtraFirePerformed -= HandleExtraFire;
                 inputHandler.OnFirePerformed -= HandleFire;
+                inputHandler.OnMagnetSelected -= HandleMagnetSelected;
+                inputHandler.OnArmorSelected -= HandleArmorSelected;
             }
         }
         
