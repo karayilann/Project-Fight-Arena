@@ -27,8 +27,19 @@ namespace Character
             var collectable = netObj.GetComponent<Collectable>();
             if (collectable == null) return;
 
-            collectableCount.Value += 1;
-            Debug.Log($"Picked {collectable.type} x{1}. Total: {collectableCount.Value}");
+            if (collectable.type == PoolObjectType.Armor)
+            {
+                hasArmor.Value = true;
+            }
+            else if (collectable.type == PoolObjectType.Magnet)
+            {
+                hasMagnet.Value = true;
+            }
+            else
+            {
+                collectableCount.Value += 1;
+                Debug.Log($"Picked {collectable.type} x{1}. Total: {collectableCount.Value}");
+            }
 
             netObj.Despawn(true);
         }

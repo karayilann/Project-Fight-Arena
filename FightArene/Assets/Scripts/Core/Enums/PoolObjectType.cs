@@ -7,5 +7,5 @@ public enum PoolObjectType
     Bamboo,
     Cone,
     Magnet,
-    Shield,
+    Armor,
 }
