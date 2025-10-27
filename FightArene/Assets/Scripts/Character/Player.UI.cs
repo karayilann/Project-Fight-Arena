@@ -7,15 +7,31 @@ namespace Character
     {
        
         [Header("UI")]
-        private Image crosshair => PlayerRequirements.Instance.crosshair;
+        private Image _crosshair;
 
         private bool isCrosshairEnabled;
+        
         private void InitUI()
         {
+            // UI referanslarını cache'le
+            if (PlayerRequirements.Instance != null)
+            {
+                _crosshair = PlayerRequirements.Instance.crosshair;
+            }
+            else
+            {
+                Debug.LogError("PlayerRequirements.Instance is NULL in InitUI!");
+                return;
+            }
+            
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-            crosshair.enabled = true;
-            isCrosshairEnabled = true;
+            
+            if (_crosshair != null)
+            {
+                _crosshair.enabled = true;
+                isCrosshairEnabled = true;
+            }
         }
 
         public void EnableCursor()
@@ -24,14 +40,14 @@ namespace Character
             {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
-                crosshair.enabled = false;
+                if (_crosshair != null) _crosshair.enabled = false;
                 isCrosshairEnabled = false;
             }
             else
             {
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
-                crosshair.enabled = true;
+                if (_crosshair != null) _crosshair.enabled = true;
                 isCrosshairEnabled = true;
             }
         }

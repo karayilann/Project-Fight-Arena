@@ -1,5 +1,3 @@
-
-
 namespace Character
 {
     public partial class Player : NetworkSingleton<Player>,IDamageable
@@ -23,6 +21,7 @@ namespace Character
             InitUI();
             InitCamera();
             InitInventory();
+            InitSkills();
         }
         
         void Update()

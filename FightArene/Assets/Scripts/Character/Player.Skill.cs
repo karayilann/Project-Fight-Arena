@@ -1,5 +1,3 @@
-// csharp
-
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -7,25 +5,121 @@ using Cysharp.Threading.Tasks;
 using Unity.Netcode;
 using UnityEngine.UI;
 using UnityEngine;
+using UITweenExtensions = Utilities.UITweenExtensions;
+using Debug = Utilities.Debug;
+
 
 namespace Character
 {
     public partial class Player
     {
-        private NetworkVariable<bool> hasArmor = new NetworkVariable<bool>(false);
-        private NetworkVariable<bool> hasMagnet = new NetworkVariable<bool>(false);
+        public NetworkVariable<bool> hasArmor = new NetworkVariable<bool>(false);
+        public NetworkVariable<bool> hasMagnet = new NetworkVariable<bool>(false);
         
-        private Image armorImage => PlayerRequirements.Instance.armorImage;
-        private Image armorTimer => PlayerRequirements.Instance.armorTimer;
-        private Image armorBackground => PlayerRequirements.Instance.armorBackground;
+        // UI referanslarını cached field'lar olarak tanımla
+        private Image _armorImage;
+        private Image _armorTimer;
+        private Image _armorBackground;
         
-        private Image magnetImage => PlayerRequirements.Instance.magnetImage;
-        private Image magnetTimer => PlayerRequirements.Instance.magnetTimer;
-        private Image magnetBackground => PlayerRequirements.Instance.magnetBackground;
+        private Image _magnetImage;
+        private Image _magnetTimer;
+        private Image _magnetBackground;
+        
+        private bool isAvailableArmor;
+        private bool isAvailableMagnet;
+
+        private int _coolDown = 5;
         
         private int _selectedSkillIndex = 0;
+        private CancellationTokenSource _magnetTweenCts;
+        private CancellationTokenSource _armorTweenCts;
         
-        
+        void InitSkills()
+        {
+            // UI referanslarını InitUI'dan al
+            if (PlayerRequirements.Instance != null)
+            {
+                _armorImage = PlayerRequirements.Instance.armorImage;
+                _armorTimer = PlayerRequirements.Instance.armorTimer;
+                _armorBackground = PlayerRequirements.Instance.armorBackground;
+                _magnetImage = PlayerRequirements.Instance.magnetImage;
+                _magnetTimer = PlayerRequirements.Instance.magnetTimer;
+                _magnetBackground = PlayerRequirements.Instance.magnetBackground;
+            }
+            else
+            {
+                Debug.LogError("PlayerRequirements.Instance is NULL in InitSkills!");
+            }
+            
+            hasArmor.OnValueChanged += OnArmorValueChanged;
+            hasMagnet.OnValueChanged += OnMagnetValueChanged;
+        }
+
+
+        private void OnMagnetValueChanged(bool previousValue, bool newValue)
+        {
+            Debug.Log($"OnMagnetValueChanged called! IsOwner: {IsOwner}, Previous: {previousValue}, New: {newValue}");
+            
+            if (!IsOwner) return;
+            
+            Debug.Log("OnMagnetValueChanged - Owner check passed!");
+            
+            _magnetTweenCts?.Cancel();
+            _magnetTweenCts?.Dispose();
+            _magnetTweenCts = null;
+
+            if (_magnetImage == null)
+            {
+                Debug.LogError("_magnetImage is NULL! PlayerRequirements UI not assigned!");
+                return;
+            }
+
+            Debug.Log($"Updating magnet UI to: {newValue}");
+
+            _magnetTweenCts = new CancellationTokenSource();
+
+            Color target = newValue
+                ? new Color(1f, 1f, 1f, 1f)
+                : new Color(1f, 1f, 1f, 0.3137255f);
+            
+            isAvailableMagnet = newValue;
+            
+            UITweenExtensions.TweenColorAsync(_magnetImage, target, 0.5f, _magnetTweenCts.Token).Forget();
+        }
+
+
+        private void OnArmorValueChanged(bool previousValue, bool newValue)
+        {
+            Debug.Log($"OnArmorValueChanged called! IsOwner: {IsOwner}, Previous: {previousValue}, New: {newValue}");
+            
+            if (!IsOwner) return;
+            
+            Debug.Log("OnArmorValueChanged - Owner check passed!");
+            
+            _armorTweenCts?.Cancel();
+            _armorTweenCts?.Dispose();
+            _armorTweenCts = null;
+
+            if (_armorImage == null)
+            {
+                Debug.LogError("_armorImage is NULL! PlayerRequirements UI not assigned!");
+                return;
+            }
+
+            Debug.Log($"Updating armor UI to: {newValue}");
+
+            _armorTweenCts = new CancellationTokenSource();
+
+            Color target = newValue
+                ? new Color(1f, 1f, 1f, 1f)
+                : new Color(1f, 1f, 1f, 0.3137255f);
+            
+            isAvailableArmor = newValue;
+            
+            UITweenExtensions.TweenColorAsync(_armorImage, target, 0.5f, _armorTweenCts.Token).Forget();
+        }
+
+
         private readonly Dictionary<Image, CancellationTokenSource> _backgroundFlashCts = new();
 
         private void StartBackgroundFlash(Image img)
@@ -88,16 +182,51 @@ namespace Character
 
         private void HandleArmorSelected()
         {
+            if (!isAvailableArmor) return;
             _selectedSkillIndex = 0;
             Debug.Log("Armor skill selected");
-            StartBackgroundFlash(armorBackground);
+            StartBackgroundFlash(_armorBackground);
         }
 
         private void HandleMagnetSelected()
         {
+            if (!isAvailableMagnet) return;
             _selectedSkillIndex = 1;
             Debug.Log("Magnet skill selected");
-            StartBackgroundFlash(magnetBackground);
+            StartBackgroundFlash(_magnetBackground);
         }
+
+                
+        private async UniTaskVoid ResetSkillsAsync(int skillIndex, float cooldownDuration)
+        {
+            if (skillIndex == 0) isAvailableArmor = false;
+            else if (skillIndex == 1) isAvailableMagnet = false;
+
+            Image timerBg = skillIndex == 0 ? _armorTimer : _magnetTimer;
+            if (timerBg != null)
+            {
+                timerBg.enabled = true;
+                timerBg.fillAmount = 0f;
+                float elapsed = 0f;
+
+                while (elapsed < cooldownDuration)
+                {
+                    elapsed += Time.deltaTime;
+                    timerBg.fillAmount = Mathf.Clamp01(elapsed / cooldownDuration);
+                    await UniTask.Yield();
+                }
+
+                timerBg.fillAmount = 1f;
+                timerBg.enabled = false;
+            }
+            else
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(cooldownDuration));
+            }
+
+            if (skillIndex == 0) isAvailableArmor = true;
+            else if (skillIndex == 1) isAvailableMagnet = true;
+        }
+
     }
 }

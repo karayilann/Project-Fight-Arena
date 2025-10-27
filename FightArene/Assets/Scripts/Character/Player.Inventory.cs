@@ -15,10 +15,9 @@ namespace Character
 
         private void OnCollectableCountChanged(int previous, int current)
         {
-            Debug.Log("Collectable Count Updated: " + current);
         }
 
-        [ServerRpc(RequireOwnership = true)]
+        [ServerRpc(RequireOwnership = false)]
         public void RequestPickupServerRpc(ulong collectableNetId, ServerRpcParams rpcParams = default)
         {
             if (NetworkManager.Singleton == null) return;
@@ -27,18 +26,27 @@ namespace Character
             var collectable = netObj.GetComponent<Collectable>();
             if (collectable == null) return;
 
-            if (collectable.type == PoolObjectType.Armor)
+            ulong clientId = rpcParams.Receive.SenderClientId;
+            
+            if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var networkClient))
             {
-                hasArmor.Value = true;
-            }
-            else if (collectable.type == PoolObjectType.Magnet)
-            {
-                hasMagnet.Value = true;
-            }
-            else
-            {
-                collectableCount.Value += 1;
-                Debug.Log($"Picked {collectable.type} x{1}. Total: {collectableCount.Value}");
+                if (networkClient.PlayerObject != null && networkClient.PlayerObject.TryGetComponent<Player>(out var targetPlayer))
+                {
+                    if (collectable.type == PoolObjectType.Armor)
+                    {
+                        targetPlayer.hasArmor.Value = true;
+                        Debug.Log("Client " + clientId + " picked Armor.");
+                    }
+                    else if (collectable.type == PoolObjectType.Magnet)
+                    {
+                        targetPlayer.hasMagnet.Value = true;
+                        Debug.Log("Client " + clientId + " picked Magnet.");
+                    }
+                    else
+                    {
+                        targetPlayer.collectableCount.Value += 1;
+                    }
+                }
             }
 
             netObj.Despawn(true);

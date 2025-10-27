@@ -144,6 +144,8 @@ public class Projectile : PooledNetworkObject
         if (_hitOccurred)
             return;
 
+        Debug.Log("Projectile collided with " + other.collider.name + " on layer " + LayerMask.LayerToName(other.gameObject.layer));
+        
         if ((hitLayers.value & (1 << other.gameObject.layer)) == 0)
             return;
         

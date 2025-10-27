@@ -137,6 +137,37 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!1 &2240741842215739524
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5179644633195240738}
+  m_Layer: 7
+  m_Name: MagnetPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5179644633195240738
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2240741842215739524}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.298, z: 0.084}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7650288594128084798}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3662869401377387291
 GameObject:
   m_ObjectHideFlags: 0
@@ -210,10 +241,10 @@ Rigidbody:
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
@@ -277,6 +308,7 @@ Transform:
   - {fileID: 6661829693954775596}
   - {fileID: 7777852370657910981}
   - {fileID: 5173088310467259047}
+  - {fileID: 5179644633195240738}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5017162226096488704
@@ -375,6 +407,8 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   cinemachineCameraTarget: {fileID: 6661829693954775596}
   gunHolder: {fileID: 2997097091531254785}
+  magnetHolder: {fileID: 5179644633195240738}
+  armorHolder: {fileID: 5173088310467259047}
   guns:
   - {fileID: -7107463362374517954, guid: b496c01388a232a468c3a63d19f23801, type: 3}
   moveSpeed: 5
@@ -391,6 +425,10 @@ MonoBehaviour:
     m_Bits: 64
   inputHandler: {fileID: 3193661236880738052}
   characterController: {fileID: 3274064111590127080}
+  hasArmor:
+    m_InternalValue: 0
+  hasMagnet:
+    m_InternalValue: 0
 --- !u!114 &3193661236880738052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -539,7 +577,6 @@ GameObject:
   - component: {fileID: 6210984007282219236}
   - component: {fileID: 2158840477360549936}
   - component: {fileID: 5564947009699733763}
-  - component: {fileID: 7888211709910115140}
   m_Layer: 7
   m_Name: Capsule
   m_TagString: Untagged
@@ -618,29 +655,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &7888211709910115140
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6895852673638488548}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8101238229101273971
 GameObject:
   m_ObjectHideFlags: 0
