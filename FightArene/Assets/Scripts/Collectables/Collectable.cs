@@ -58,6 +58,12 @@ public class Collectable : PooledNetworkObject
 
             if (token.IsCancellationRequested) return;
 
+            if (!IsSpawned)
+            {
+                Debug.Log("Collectable is no longer spawned, skipping ground hit handling");
+                return;
+            }
+
             if (IsServer)
             {
                 ReturnToPool();
