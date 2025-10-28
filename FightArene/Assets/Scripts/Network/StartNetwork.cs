@@ -1,3 +1,4 @@
+// csharp
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -8,6 +9,7 @@ namespace Network
     public class StartNetwork : MonoBehaviour
     {
         public GameObject networkCanvas;
+
         private void OnDestroy()
         {
             ShutdownNetwork();
@@ -27,21 +29,18 @@ namespace Network
             }
 
             Debug.Log("Starting Host...");
-            
+
             try
             {
                 NetworkManager.Singleton.StartHost();
-                if (NetworkManager.Singleton.IsListening)
-                {
-                    networkCanvas.SetActive(false);
-                }
+                // Canvas artık GameStartController tarafından kapatılacak
             }
             catch (System.Exception e)
             {
                 Debug.LogError($"Host başlatılamadı: {e.Message}");
             }
         }
-        
+
         public void StartClient()
         {
             if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
@@ -51,14 +50,11 @@ namespace Network
             }
 
             Debug.Log("Starting Client...");
-            
+
             try
             {
                 NetworkManager.Singleton.StartClient();
-                if (NetworkManager.Singleton.IsListening)
-                {
-                    networkCanvas.SetActive(false);
-                }
+                // Canvas artık GameStartController tarafından kapatılacak
             }
             catch (System.Exception e)
             {
@@ -80,7 +76,7 @@ namespace Network
                 Debug.Log("Network kapatıldı.");
             }
         }
-        
+
         public void PrintConnectedClients()
         {
             if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsListening)

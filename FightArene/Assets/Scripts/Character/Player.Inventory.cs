@@ -20,7 +20,6 @@ namespace Character
 
         private void OnCollisionEnter(Collision other)
         {
-            Debug.Log("OnCollisionEnter triggered with " + other.gameObject.name);
             if (other.gameObject.TryGetComponent<NetworkObject>(out var netObj) &&
                 other.gameObject.TryGetComponent<Collectable>(out var collectable))
             {
