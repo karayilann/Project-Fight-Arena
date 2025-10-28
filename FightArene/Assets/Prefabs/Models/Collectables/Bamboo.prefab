@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7430262224337536063}
   - component: {fileID: 8814662513725757252}
   - component: {fileID: -7771621108940981575}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bamboo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -132,7 +132,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 82527838
+  GlobalObjectIdHash: 2491355339
   InScenePlacedSourceGlobalObjectIdHash: 2491355339
   DeferredDespawnTick: 0
   Ownership: 1
