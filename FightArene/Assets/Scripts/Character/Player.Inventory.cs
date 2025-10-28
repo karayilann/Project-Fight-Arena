@@ -1,4 +1,5 @@
 using Unity.Netcode;
+using UnityEngine;
 using Debug = Utilities.Debug;
 
 namespace Character
@@ -17,6 +18,17 @@ namespace Character
         {
         }
 
+        private void OnCollisionEnter(Collision other)
+        {
+            Debug.Log("OnCollisionEnter triggered with " + other.gameObject.name);
+            if (other.gameObject.TryGetComponent<NetworkObject>(out var netObj) &&
+                other.gameObject.TryGetComponent<Collectable>(out var collectable))
+            {
+                RequestPickupServerRpc(netObj.NetworkObjectId);
+            }
+        }
+        
+        
         [ServerRpc(RequireOwnership = false)]
         public void RequestPickupServerRpc(ulong collectableNetId, ServerRpcParams rpcParams = default)
         {
