@@ -126,7 +126,7 @@ namespace Network
                 }
 
                 tries++;
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSecondsRealtime(0.1f);
             }
 
             Debug.LogError($"PlayerObject for client {clientId} not found within timeout (5 seconds).");

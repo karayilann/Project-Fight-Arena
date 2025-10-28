@@ -17,6 +17,10 @@ namespace Network
             {
                 Debug.LogError("GameStartController: networkCanvas atanmamış!");
             }
+            
+            // Başlangıçta oyunu durdur
+            Time.timeScale = 0f;
+            Debug.Log("GameStartController: Time.timeScale set to 0. Waiting for players...");
         }
 
         private void Update()
@@ -35,14 +39,16 @@ namespace Network
                 if (connectedCount >= minPlayers && !gameStarted)
                 {
                     gameStarted = true;
+                    Time.timeScale = 1f;
                     networkCanvas.SetActive(false);
-                    Debug.Log("GameStartController: Game started, canvas deactivated.");
+                    Debug.Log("GameStartController: Game started! Time.timeScale set to 1, canvas deactivated.");
                 }
                 else if (connectedCount < minPlayers && gameStarted)
                 {
                     gameStarted = false;
+                    Time.timeScale = 0f;
                     networkCanvas.SetActive(true);
-                    Debug.Log("GameStartController: Not enough players, canvas activated.");
+                    Debug.Log("GameStartController: Not enough players. Time.timeScale set to 0, canvas activated.");
                 }
             }
         }
@@ -50,6 +56,9 @@ namespace Network
         private void OnDisable()
         {
             UnsubscribeFromEvents();
+            
+            // Script deaktif olduğunda timeScale'i normale döndür
+            Time.timeScale = 1f;
         }
 
         private void SubscribeToEvents()
