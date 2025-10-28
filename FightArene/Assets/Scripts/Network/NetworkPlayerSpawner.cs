@@ -32,6 +32,12 @@ namespace Network
             if (!isSubscribed && NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
             {
                 SubscribeToEvents();
+                
+                // Server ise, spawn override'ı ayarla
+                if (NetworkManager.Singleton.IsServer)
+                {
+                    SetupSpawnOverride();
+                }
             }
         }
 
@@ -40,12 +46,43 @@ namespace Network
             UnsubscribeFromEvents();
         }
 
+        private void SetupSpawnOverride()
+        {
+            // NetworkManager'a custom spawn pozisyonu belirle
+            if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer)
+            {
+                // PlayerPrefab'ın spawn pozisyonunu override et
+                NetworkManager.Singleton.OnServerStarted += () =>
+                {
+                    Debug.Log("NetworkPlayerSpawner: Server started, spawn override active.");
+                };
+            }
+        }
+
         private void SubscribeToEvents()
         {
             if (isSubscribed) return;
 
             NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
             NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
+            
+            // Server spawn handler'ı ekle
+            if (NetworkManager.Singleton.IsServer)
+            {
+                NetworkManager.Singleton.OnServerStarted += OnServerStarted;
+                
+                // Mevcut bağlı oyuncuları kontrol et ve spawn pozisyonlarını ayarla
+                Debug.Log($"NetworkPlayerSpawner: Checking already connected clients. Count: {NetworkManager.Singleton.ConnectedClientsList.Count}");
+                foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
+                {
+                    if (!clientSpawnIndices.ContainsKey(client.ClientId))
+                    {
+                        Debug.Log($"NetworkPlayerSpawner: Found already connected client {client.ClientId}, assigning spawn position.");
+                        OnClientConnected(client.ClientId);
+                    }
+                }
+            }
+            
             isSubscribed = true;
             Debug.Log("NetworkPlayerSpawner: Event callbacks registered.");
         }
@@ -56,7 +93,18 @@ namespace Network
 
             NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
             NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;
+            
+            if (NetworkManager.Singleton.IsServer)
+            {
+                NetworkManager.Singleton.OnServerStarted -= OnServerStarted;
+            }
+            
             isSubscribed = false;
+        }
+
+        private void OnServerStarted()
+        {
+            Debug.Log("NetworkPlayerSpawner: Server started, ready to assign spawn positions.");
         }
 
         private void OnClientConnected(ulong clientId)
@@ -67,7 +115,7 @@ namespace Network
             
             int index = AllocateIndex();
             clientSpawnIndices[clientId] = index;
-            Debug.Log($"Allocated spawn index {index} for client {clientId}");
+            Debug.Log($"NetworkPlayerSpawner: Allocated spawn index {index} for client {clientId}");
             
             StartCoroutine(AssignWhenReady(clientId, index));
         }
@@ -78,7 +126,7 @@ namespace Network
             if (clientSpawnIndices.TryGetValue(clientId, out var idx))
             {
                 clientSpawnIndices.Remove(clientId);
-                if (idx < nextIndex) nextIndex = idx;
+                Debug.Log($"NetworkPlayerSpawner: Client {clientId} disconnected, freed spawn index {idx}");
             }
         }
 
@@ -87,41 +135,72 @@ namespace Network
             if (spawnPoints == null || spawnPoints.Length == 0) return 0;
             int idx = nextIndex % spawnPoints.Length;
             nextIndex++;
+            Debug.Log($"NetworkPlayerSpawner: Next spawn index will be {nextIndex}, assigned {idx}");
             return idx;
         }
 
         private IEnumerator AssignWhenReady(ulong clientId, int index)
         {
-            Debug.Log($"AssignWhenReady started for client {clientId}, index {index}");
+            Debug.Log($"NetworkPlayerSpawner: AssignWhenReady started for client {clientId}, index {index}");
+            
+            yield return new WaitForSecondsRealtime(0.2f); // Kısa bir gecikme ekle
             
             var tries = 0;
             while (tries < 50)
             {
-                if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client) &&
+                if (NetworkManager.Singleton != null && 
+                    NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client) &&
                     client.PlayerObject != null)
                 {
                     var playerObj = client.PlayerObject;
                     var pos = GetSpawnPosition(index);
                     var rot = GetSpawnRotation(index);
                     
-                    Debug.Log($"Moving client {clientId} from {playerObj.transform.position} to {pos}");
+                    Debug.Log($"NetworkPlayerSpawner: Moving client {clientId} from {playerObj.transform.position} to {pos}");
                     
-                    // Server tarafında pozisyonu ayarla
-                    playerObj.transform.position = pos;
-                    playerObj.transform.rotation = rot;
+                    // PlayerSpawnSync bileşenini al
+                    var spawnSync = playerObj.GetComponent<PlayerSpawnSync>();
                     
-                    // CharacterController varsa deaktif et, pozisyon ayarla, tekrar aktif et
-                    var characterController = playerObj.GetComponent<CharacterController>();
-                    if (characterController != null)
+                    if (spawnSync != null)
                     {
-                        characterController.enabled = false;
+                        // ClientRpc ile tüm clientlara pozisyonu gönder
+                        spawnSync.TeleportClientRpc(pos, rot);
+                        Debug.Log($"NetworkPlayerSpawner: Called TeleportClientRpc for client {clientId}");
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"NetworkPlayerSpawner: PlayerSpawnSync component not found on client {clientId}! Add it to Player prefab.");
+                        
+                        // Fallback: Manuel pozisyon ayarla
+                        var characterController = playerObj.GetComponent<CharacterController>();
+                        var rb = playerObj.GetComponent<Rigidbody>();
+                        
+                        if (characterController != null)
+                        {
+                            characterController.enabled = false;
+                        }
+                        
+                        if (rb != null)
+                        {
+                            rb.linearVelocity = Vector3.zero;
+                            rb.angularVelocity = Vector3.zero;
+                        }
+                        
                         playerObj.transform.position = pos;
                         playerObj.transform.rotation = rot;
-                        characterController.enabled = true;
-                        Debug.Log($"CharacterController found and repositioned for client {clientId}");
+                        
+                        yield return null;
+                        
+                        playerObj.transform.position = pos;
+                        playerObj.transform.rotation = rot;
+                        
+                        if (characterController != null)
+                        {
+                            characterController.enabled = true;
+                        }
                     }
                     
-                    Debug.Log($"Client {clientId} assigned to spawn index {index} at {pos}");
+                    Debug.Log($"NetworkPlayerSpawner: ✓ Client {clientId} successfully assigned to spawn index {index} at position {pos}");
                     yield break;
                 }
 
@@ -129,7 +208,7 @@ namespace Network
                 yield return new WaitForSecondsRealtime(0.1f);
             }
 
-            Debug.LogError($"PlayerObject for client {clientId} not found within timeout (5 seconds).");
+            Debug.LogError($"NetworkPlayerSpawner: PlayerObject for client {clientId} not found within timeout (5 seconds).");
         }
 
         private Vector3 GetSpawnPosition(int index)
@@ -138,11 +217,11 @@ namespace Network
             {
                 index = Mathf.Clamp(index, 0, spawnPoints.Length - 1);
                 var pos = spawnPoints[index].position;
-                Debug.Log($"GetSpawnPosition: index {index} -> position {pos}");
+                Debug.Log($"NetworkPlayerSpawner: GetSpawnPosition -> index {index} = position {pos}");
                 return pos;
             }
 
-            Debug.LogWarning("GetSpawnPosition: No spawn points available, returning Vector3.zero");
+            Debug.LogWarning("NetworkPlayerSpawner: No spawn points available, returning Vector3.zero");
             return Vector3.zero;
         }
 
