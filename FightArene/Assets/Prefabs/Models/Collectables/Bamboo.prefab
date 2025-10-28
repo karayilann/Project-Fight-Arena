@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3273090619136314215}
   - component: {fileID: 7430262224337536063}
   - component: {fileID: 8814662513725757252}
-  - component: {fileID: 986038551869548074}
+  - component: {fileID: -7771621108940981575}
   m_Layer: 0
   m_Name: Bamboo
   m_TagString: Untagged
@@ -132,8 +132,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2491355339
-  InScenePlacedSourceGlobalObjectIdHash: 0
+  GlobalObjectIdHash: 82527838
+  InScenePlacedSourceGlobalObjectIdHash: 2491355339
   DeferredDespawnTick: 0
   Ownership: 1
   AlwaysReplicateAsRoot: 0
@@ -160,8 +160,8 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   type: 2
   groundStayDuration: 3
---- !u!64 &986038551869548074
-MeshCollider:
+--- !u!136 &-7771621108940981575
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -178,7 +178,8 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -8083293052036210189, guid: 85f70c2f29ac664408b384f5b39ae447, type: 3}
+  serializedVersion: 2
+  m_Radius: 0.44
+  m_Height: 2.02
+  m_Direction: 2
+  m_Center: {x: -0.066095, y: 0.03435498, z: 0.031830456}

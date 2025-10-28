@@ -186,11 +186,27 @@ namespace Character
         
         private void HandleFire()
         {
-            _currentGun?.Fire();
-            Debug.Log("HandleFire called.");
+            PlayThrowAnimation();
+            Debug.Log("HandleFire called - Animation started.");
+        }
+        
+        // Animation Event: PlayerAnimationEventProxy tarafından çağrılır
+        // Bu metod PUBLIC olmak ZORUNDA (proxy script'ten erişim için)
+        public void OnThrowReleasePoint()
+        {
+            // Bu metod Animation Event → Proxy → Player şeklinde çağrılacak
+            // 23. frame'de projectile spawn edilecek
+            if (_currentGun != null)
+            {
+                _currentGun.Fire(); // Gerçek ateş etme işlemi burada
+                Debug.Log("Player: OnThrowReleasePoint called - Projectile spawned at frame 23!");
+            }
+            else
+            {
+                Debug.LogWarning("Player: OnThrowReleasePoint called but _currentGun is null!");
+            }
         }
 
-        
         // Add Using Feedback UI for skills
         private void HandleExtraFire()
         {

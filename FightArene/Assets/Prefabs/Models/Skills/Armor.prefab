@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5311118272309105897}
-  - component: {fileID: 2953257605603029384}
   - component: {fileID: 7079504367094139824}
   - component: {fileID: 436043663234634569}
   - component: {fileID: 7595507399537618982}
@@ -36,27 +35,6 @@ Transform:
   - {fileID: 2045412277823000596}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &2953257605603029384
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6578731794710727038}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.02005015, y: 0.0059865816, z: 0.02563725}
-  m_Center: {x: 0.000099315774, y: 0.0014347625, z: -0.0017897198}
 --- !u!114 &7079504367094139824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,6 +131,7 @@ GameObject:
   - component: {fileID: 2045412277823000596}
   - component: {fileID: 909651482210869981}
   - component: {fileID: 4907126909225223755}
+  - component: {fileID: 4246596752868949339}
   m_Layer: 7
   m_Name: Mesh
   m_TagString: Untagged
@@ -234,3 +213,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &4246596752868949339
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8745086264952728667}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.020050151, y: 0.005986584, z: 0.02563726}
+  m_Center: {x: 0.00009931579, y: 0.001434763, z: -0.0017897204}

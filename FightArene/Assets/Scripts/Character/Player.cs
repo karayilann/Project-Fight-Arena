@@ -22,11 +22,13 @@ namespace Character
             InitCamera();
             InitInventory();
             InitSkills();
+            InitAnimation();
         }
         
         void Update()
         {
             ControllerUpdate();
+            UpdateAnimation();
         }
         
         public override void OnNetworkDespawn()
