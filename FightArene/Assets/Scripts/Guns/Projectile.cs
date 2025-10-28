@@ -12,6 +12,7 @@ public class Projectile : PooledNetworkObject
     [SerializeField] private float projectileSpeed = 20f;
     [SerializeField] private float arcHeight = 5f;
     [SerializeField] private LayerMask hitLayers;
+    [SerializeField] private float ownerIgnoreTime = 0.3f; // Sahibi ignore etme süresi (saniye)
 
     [Header("Visual")]
     [SerializeField] private GameObject impactEffect;
@@ -24,6 +25,10 @@ public class Projectile : PooledNetworkObject
     private Tween _movementTween;
     private Vector3 _lastCheckPosition;
     private bool _hitOccurred;
+    
+    private GameObject _owner;
+    private float _spawnTime;
+    private Collider _projectileCollider;
 
     public override void OnSpawnFromPool()
     {
@@ -31,6 +36,13 @@ public class Projectile : PooledNetworkObject
         
         _isInitialized = false;
         _hitOccurred = false;
+        _owner = null;
+        _spawnTime = Time.time;
+        
+        if (_projectileCollider == null)
+        {
+            _projectileCollider = GetComponent<Collider>();
+        }
         
         if (_movementTween.isAlive)
         {
@@ -59,15 +71,18 @@ public class Projectile : PooledNetworkObject
         
         _isInitialized = false;
         _hitOccurred = false;
+        _owner = null;
     }
 
-    public void Initialize(Vector3 startPos, Vector3 targetPos)
+    public void Initialize(Vector3 startPos, Vector3 targetPos, GameObject owner = null)
     {
         if (!IsServer && !IsHost)
             return;
 
         _startPosition = startPos;
         _targetPosition = targetPos;
+        _owner = owner;
+        _spawnTime = Time.time;
 
         transform.position = _startPosition;
 
@@ -84,6 +99,8 @@ public class Projectile : PooledNetworkObject
         _hitOccurred = false;
 
         LaunchProjectile().Forget();
+        
+        Debug.Log($"Projectile initialized. Owner: {(_owner != null ? _owner.name : "None")}");
     }
 
     private async UniTaskVoid LaunchProjectile()
@@ -143,6 +160,15 @@ public class Projectile : PooledNetworkObject
 
         if (_hitOccurred)
             return;
+
+        if (_owner != null && Time.time - _spawnTime < ownerIgnoreTime)
+        {
+            if (other.gameObject == _owner || other.transform.IsChildOf(_owner.transform) || _owner.transform.IsChildOf(other.transform))
+            {
+                Debug.Log($"Projectile ignored collision with owner {_owner.name} (too early: {Time.time - _spawnTime:F2}s < {ownerIgnoreTime}s)");
+                return;
+            }
+        }
 
         Debug.Log("Projectile collided with " + other.collider.name + " on layer " + LayerMask.LayerToName(other.gameObject.layer));
         

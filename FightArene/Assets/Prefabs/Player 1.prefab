@@ -1066,7 +1066,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 960186922
+  GlobalObjectIdHash: 4000169095
   InScenePlacedSourceGlobalObjectIdHash: 1607126385
   DeferredDespawnTick: 0
   Ownership: 1
@@ -1147,13 +1147,13 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 2.33906
+  m_Height: 2.385362
   m_Radius: 0.7654357
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: -0.02999997, y: 0.1677581, z: -0.1}
+  m_Center: {x: -0.02999997, y: 0.02776575, z: -0.1}
 --- !u!136 &9154966111623436351
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1174,9 +1174,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.8276224
-  m_Height: 2.502203
+  m_Height: 2.3853617
   m_Direction: 1
-  m_Center: {x: -0.07426739, y: 0.08618641, z: -0.100000024}
+  m_Center: {x: -0.07426739, y: 0.02776575, z: -0.100000024}
 --- !u!114 &77966404247120676
 MonoBehaviour:
   m_ObjectHideFlags: 0

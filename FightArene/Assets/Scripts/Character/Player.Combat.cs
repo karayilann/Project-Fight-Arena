@@ -44,8 +44,10 @@ namespace Character
         }
         
         [ServerRpc(RequireOwnership = false)]
-        public void SpawnProjectileServerRpc(Vector3 spawnPos, Vector3 targetPos)
+        public void SpawnProjectileServerRpc(Vector3 spawnPos, Vector3 targetPos, ServerRpcParams rpcParams = default)
         {
+            ulong clientId = rpcParams.Receive.SenderClientId;
+            
             NetworkObject projectileNetObj = NetworkObjectPool.Instance.Spawn(
                 PoolObjectType.Projectile,
                 spawnPos,
@@ -60,8 +62,18 @@ namespace Character
             
             if (projectileNetObj.TryGetComponent<Projectile>(out var projectile))
             {
-                projectile.Initialize(spawnPos, targetPos);
-                Debug.Log("Projectile spawned from pool and initialized!");
+                // Owner bilgisini bul
+                GameObject owner = null;
+                if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var networkClient))
+                {
+                    if (networkClient.PlayerObject != null)
+                    {
+                        owner = networkClient.PlayerObject.gameObject;
+                    }
+                }
+                
+                projectile.Initialize(spawnPos, targetPos, owner);
+                Debug.Log($"Projectile spawned from pool and initialized with owner: {(owner != null ? owner.name : "None")}");
             }
             else
             {
@@ -190,15 +202,11 @@ namespace Character
             Debug.Log("HandleFire called - Animation started.");
         }
         
-        // Animation Event: PlayerAnimationEventProxy tarafından çağrılır
-        // Bu metod PUBLIC olmak ZORUNDA (proxy script'ten erişim için)
         public void OnThrowReleasePoint()
         {
-            // Bu metod Animation Event → Proxy → Player şeklinde çağrılacak
-            // 23. frame'de projectile spawn edilecek
             if (_currentGun != null)
             {
-                _currentGun.Fire(); // Gerçek ateş etme işlemi burada
+                _currentGun.Fire();
                 Debug.Log("Player: OnThrowReleasePoint called - Projectile spawned at frame 23!");
             }
             else
