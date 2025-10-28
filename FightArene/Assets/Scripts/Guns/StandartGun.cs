@@ -46,11 +46,11 @@ public class StandartGun : AGun
 
         if (Physics.Raycast(ray, out RaycastHit hit, range))
         {
-            if (hit.collider != null && hit.collider.gameObject != _player.gameObject)
+            if (hit.collider != null )
             {
                 targetPosition = hit.point;
             }
-            else if (hit.collider != null && hit.collider.gameObject == _player.gameObject)
+            else if (hit.collider != null )
             {
                 Debug.Log("Hit self, ignoring.");
                 targetPosition = Vector3.zero;
