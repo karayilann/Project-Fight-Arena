@@ -1394,7 +1394,7 @@ GameObject:
   - component: {fileID: 1499830905}
   - component: {fileID: 1499830904}
   - component: {fileID: 1499830903}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2421,7 +2421,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23d895cfabb0425388fda93b8ef8faed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Network.GameStartController
-  minPlayers: 2
+  minPlayers: 1
   networkCanvas: {fileID: 1199324589}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
