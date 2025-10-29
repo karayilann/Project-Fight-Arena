@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Skills;
 using Unity.Netcode;
 using UnityEngine;
 using Debug = Utilities.Debug;
@@ -196,20 +197,27 @@ namespace Character
 
                     Debug.Log($"[SERVER] Magnet spawned at position: {targetPlayer.magnetHolder.position} for ClientId: {clientId}");
 
-                    if (magnetNetObj.TrySetParent(targetPlayer.transform))
+                    bool parentSet = magnetNetObj.TrySetParent(targetPlayer.transform);
+                    
+                    if (magnetNetObj.TryGetComponent<Magnet>(out var magnet))
+                    {
+                        magnet.SetOwnerPlayer(targetPlayer.NetworkObjectId);
+                        Debug.Log($"[SERVER] Set magnet owner to player NetworkObjectId: {targetPlayer.NetworkObjectId}");
+                    }
+
+                    if (parentSet)
                     {
                         targetPlayer._currentMagnet = magnetNetObj;
                         targetPlayer.UpdateMagnetPositionClientRpc(magnetNetObj.NetworkObjectId);
-                        
-                        targetPlayer.hasMagnet.Value = false;
-                        
                         Debug.Log($"[SERVER] Magnet spawned and parented successfully to ClientId {clientId}'s player!");
                     }
                     else
                     {
-                        Debug.LogError("Failed to parent magnet!");
-                        NetworkObjectPool.Instance.Despawn(magnetNetObj);
+                        Debug.LogWarning("Failed to parent magnet, but magnet will still work with owner ID!");
+                        targetPlayer._currentMagnet = magnetNetObj;
                     }
+                    
+                    targetPlayer.hasMagnet.Value = false;
                 }
                 else
                 {

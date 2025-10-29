@@ -48,14 +48,14 @@ namespace Character
             {
                 if (networkClient.PlayerObject != null && networkClient.PlayerObject.TryGetComponent<Player>(out var targetPlayer))
                 {
-                    if (collectable.type == PoolObjectType.Armor)
+                    if (collectable.type == PoolObjectType.CollectableArmor)
                     {
                         targetPlayer.hasArmor.Value = true;
                         Debug.Log("Client " + clientId + " picked Armor. Despawning collectable...");
                         collectable.ReturnToPool();
                         return;
                     }
-                    else if (collectable.type == PoolObjectType.Magnet)
+                    else if (collectable.type == PoolObjectType.CollectableMagnet)
                     {
                         targetPlayer.hasMagnet.Value = true;
                         Debug.Log("Client " + clientId + " picked Magnet. Despawning collectable...");
