@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using Debug = Utilities.Debug;
@@ -8,6 +9,8 @@ namespace Character
     {
         NetworkVariable<int> collectableCount = new NetworkVariable<int>(0);
         public AudioClip collectClip;
+        public List<PoolObjectType> collectableTypes;
+
 
         void InitInventory()
         {
@@ -24,6 +27,7 @@ namespace Character
             if (other.gameObject.TryGetComponent<NetworkObject>(out var netObj) &&
                 other.gameObject.TryGetComponent<Collectable>(out var collectable))
             {
+                if(!collectableTypes.Contains(collectable.type)) return;
                 RequestPickupServerRpc(netObj.NetworkObjectId);
             }
         }

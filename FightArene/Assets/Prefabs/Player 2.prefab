@@ -1268,7 +1268,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3459569153
+  GlobalObjectIdHash: 484881190
   InScenePlacedSourceGlobalObjectIdHash: 484881190
   DeferredDespawnTick: 0
   Ownership: 1
@@ -1316,6 +1316,7 @@ MonoBehaviour:
   inputHandler: {fileID: 325872207356626516}
   characterController: {fileID: 4421202925367876875}
   collectClip: {fileID: 8300000, guid: 416f4b63ae4cfa245909172715f21c95, type: 3}
+  collectableTypes: 01000000030000000600000007000000
   hasArmor:
     m_InternalValue: 0
   hasMagnet:
