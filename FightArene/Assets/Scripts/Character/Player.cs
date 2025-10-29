@@ -1,3 +1,5 @@
+using Utilities;
+
 namespace Character
 {
     public partial class Player : NetworkSingleton<Player>,IDamageable
@@ -6,14 +8,36 @@ namespace Character
         {
             base.OnNetworkSpawn();
             
-            if (!IsOwner)
+            // if (!IsOwner)
+            // {
+            //     enabled = false;
+            //     return;
+            // }
+            // PlayerInit();
+            
+            try
             {
-                enabled = false;
-                return;
+                Debug.Log($"Player spawned! IsOwner: {IsOwner}, ClientId: {OwnerClientId}, NetworkObjectId: {NetworkObjectId}");
+        
+                if (!IsLocalPlayer)
+                {
+                    Debug.Log("Bu benim player'ım değil, kontrol etmeyeceğim.");
+                    // Input component'lerini devre dışı bırak
+                    var inputHandler = GetComponent<PlayerInputHandler>();
+                    if (inputHandler) inputHandler.enabled = false;
+                    return;
+                }
+        
+                Debug.Log("Bu benim player'ım! Kontrol ediyorum.");
+                PlayerInit();
             }
-            PlayerInit();
+            catch (System.Exception e)
+            {
+                Debug.LogError($"Player.OnNetworkSpawn HATA: {e.Message}\n{e.StackTrace}");
+            }
         }
-
+        
+        
         private void PlayerInit()
         {
             SubscribeToInput();

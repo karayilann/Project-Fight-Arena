@@ -407,6 +407,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Character.Player
   ShowTopMostFoldoutHeaderGroup: 1
+  animator: {fileID: 0}
   cinemachineCameraTarget: {fileID: 6661829693954775596}
   gunHolder: {fileID: 2997097091531254785}
   magnetHolder: {fileID: 5179644633195240738}
@@ -571,7 +572,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4143610580668547706}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9c4366fd79af4c02a97f66118c94a5c9, type: 3}
   m_Name: 

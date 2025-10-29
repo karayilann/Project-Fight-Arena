@@ -433,7 +433,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2661302082777987427
 Transform:
   m_ObjectHideFlags: 0
@@ -1025,7 +1025,7 @@ GameObject:
   - component: {fileID: 994509519390886021}
   - component: {fileID: 2543269981195601044}
   m_Layer: 7
-  m_Name: Player 1
+  m_Name: Player 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1066,7 +1066,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1607126385
+  GlobalObjectIdHash: 484881190
   InScenePlacedSourceGlobalObjectIdHash: 1607126385
   DeferredDespawnTick: 0
   Ownership: 1

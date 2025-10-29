@@ -6,234 +6,310 @@ using Debug = Utilities.Debug;
 
 namespace Network
 {
-    public class NetworkPlayerSpawner : MonoBehaviour
+    /// <summary>
+    /// Oyuncuları belirli spawn noktalarında oluşturur ve farklı prefab'lar kullanır
+    /// İlk oyuncu (host) playerPrefab, diğerleri clientPrefab alır
+    /// ÖNEMLI: Bu prefab'lar NetworkManager'ın Network Prefabs listesine MANUEL olarak eklenmelidir!
+    /// </summary>
+    public class NetworkPlayerSpawner : NetworkBehaviour
     {
+        [Header("Prefab Ayarları")]
+        [Tooltip("İlk bağlanan oyuncu için prefab (host) - NetworkManager'a da ekleyin!")]
+        public GameObject playerPrefab;
+        
+        [Tooltip("Diğer oyuncular için prefab (client) - NetworkManager'a da ekleyin!")]
+        public GameObject clientPrefab;
+        
+        [Header("Spawn Noktaları")]
         public Transform[] spawnPoints;
+        
+        [Header("Oyun Başlatma")]
+        public int minPlayers = 2;
+        public GameObject networkCanvas;
+        
         private readonly Dictionary<ulong, int> clientSpawnIndices = new Dictionary<ulong, int>();
-        private int nextIndex;
-        private bool isSubscribed = false;
+        private int nextSpawnIndex;
+        private bool gameStarted;
 
         private void Start()
         {
-            // Spawn noktalarını kontrol et
-            if (spawnPoints == null || spawnPoints.Length == 0)
+            ValidateReferences();
+            
+            // Sadece server Time.timeScale'i kontrol eder
+            // Client'lar ServerRpc'den gelecek komutu bekler
+            if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsListening)
             {
-                Debug.LogError("NetworkPlayerSpawner: spawnPoints boş! Inspector'dan atayın!");
+                Time.timeScale = 0f;
+                Debug.Log("NetworkPlayerSpawner: Network henüz başlamadı, oyun durduruldu.");
+            }
+            else if (NetworkManager.Singleton.IsServer)
+            {
+                Time.timeScale = 0f;
+                Debug.Log("NetworkPlayerSpawner: Server - Oyun durduruldu, oyuncular bekleniyor...");
             }
             else
             {
-                Debug.Log($"NetworkPlayerSpawner: {spawnPoints.Length} spawn noktası bulundu.");
+                Debug.Log("NetworkPlayerSpawner: Client - Oyun durumu server tarafından kontrol ediliyor.");
             }
         }
 
-        private void Update()
+        private void ValidateReferences()
         {
-            // NetworkManager hazır olduğunda event'lere subscribe ol
-            if (!isSubscribed && NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+            if (spawnPoints == null || spawnPoints.Length == 0)
             {
-                SubscribeToEvents();
-                
-                // Server ise, spawn override'ı ayarla
-                if (NetworkManager.Singleton.IsServer)
+                Debug.LogError("NetworkPlayerSpawner: Spawn noktaları atanmamış!");
+            }
+            if (playerPrefab == null)
+            {
+                Debug.LogError("NetworkPlayerSpawner: Player Prefab atanmamış!");
+            }
+            else
+            {
+                var netObj = playerPrefab.GetComponent<NetworkObject>();
+                if (netObj == null)
                 {
-                    SetupSpawnOverride();
+                    Debug.LogError($"NetworkPlayerSpawner: {playerPrefab.name} prefab'ında NetworkObject component yok!");
                 }
             }
+            
+            if (clientPrefab == null)
+            {
+                Debug.LogError("NetworkPlayerSpawner: Client Prefab atanmamış!");
+            }
+            else
+            {
+                var netObj = clientPrefab.GetComponent<NetworkObject>();
+                if (netObj == null)
+                {
+                    Debug.LogError($"NetworkPlayerSpawner: {clientPrefab.name} prefab'ında NetworkObject component yok!");
+                }
+            }
+            
+            if (networkCanvas == null)
+            {
+                Debug.LogError("NetworkPlayerSpawner: Network Canvas atanmamış!");
+            }
+            
+            // NetworkManager kontrolü
+            if (NetworkManager.Singleton != null)
+            {
+                bool playerRegistered = false;
+                bool clientRegistered = false;
+                
+                foreach (var prefab in NetworkManager.Singleton.NetworkConfig.Prefabs.Prefabs)
+                {
+                    if (prefab.Prefab == playerPrefab) playerRegistered = true;
+                    if (prefab.Prefab == clientPrefab) clientRegistered = true;
+                }
+                
+                if (!playerRegistered)
+                {
+                    Debug.LogError($"NetworkPlayerSpawner: {playerPrefab?.name} NetworkManager'ın Network Prefabs listesine EKLENMEMİŞ! Inspector'dan ekleyin!");
+                }
+                if (!clientRegistered)
+                {
+                    Debug.LogError($"NetworkPlayerSpawner: {clientPrefab?.name} NetworkManager'ın Network Prefabs listesine EKLENMEMİŞ! Inspector'dan ekleyin!");
+                }
+                
+                if (playerRegistered && clientRegistered)
+                {
+                    Debug.Log("NetworkPlayerSpawner: ✓ Tüm prefab'lar NetworkManager'a kayıtlı.");
+                }
+            }
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            if (!IsServer) return;
+
+            NetworkManager.OnClientConnectedCallback += OnClientConnected;
+            NetworkManager.OnClientDisconnectCallback += OnClientDisconnected;
+            
+            Debug.Log("NetworkPlayerSpawner: Server aktif, event listener'lar eklendi.");
+            
+            // HOST için player spawn et (ClientId 0)
+            if (NetworkManager.IsHost)
+            {
+                Debug.Log("NetworkPlayerSpawner: Host spawn ediliyor...");
+                OnClientConnected(NetworkManager.ServerClientId);
+            }
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            if (!IsServer) return;
+
+            NetworkManager.OnClientConnectedCallback -= OnClientConnected;
+            NetworkManager.OnClientDisconnectCallback -= OnClientDisconnected;
         }
 
         private void OnDisable()
         {
-            UnsubscribeFromEvents();
-        }
-
-        private void SetupSpawnOverride()
-        {
-            // NetworkManager'a custom spawn pozisyonu belirle
+            // Sadece server cleanup yapar
             if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer)
             {
-                // PlayerPrefab'ın spawn pozisyonunu override et
-                NetworkManager.Singleton.OnServerStarted += () =>
-                {
-                    Debug.Log("NetworkPlayerSpawner: Server started, spawn override active.");
-                };
+                Time.timeScale = 1f;
+                Debug.Log("NetworkPlayerSpawner: Server deaktif, Time.timeScale normale döndürüldü.");
             }
-        }
-
-        private void SubscribeToEvents()
-        {
-            if (isSubscribed) return;
-
-            NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
-            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
-            
-            // Server spawn handler'ı ekle
-            if (NetworkManager.Singleton.IsServer)
-            {
-                NetworkManager.Singleton.OnServerStarted += OnServerStarted;
-                
-                // Mevcut bağlı oyuncuları kontrol et ve spawn pozisyonlarını ayarla
-                Debug.Log($"NetworkPlayerSpawner: Checking already connected clients. Count: {NetworkManager.Singleton.ConnectedClientsList.Count}");
-                foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
-                {
-                    if (!clientSpawnIndices.ContainsKey(client.ClientId))
-                    {
-                        Debug.Log($"NetworkPlayerSpawner: Found already connected client {client.ClientId}, assigning spawn position.");
-                        OnClientConnected(client.ClientId);
-                    }
-                }
-            }
-            
-            isSubscribed = true;
-            Debug.Log("NetworkPlayerSpawner: Event callbacks registered.");
-        }
-
-        private void UnsubscribeFromEvents()
-        {
-            if (!isSubscribed || NetworkManager.Singleton == null) return;
-
-            NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
-            NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;
-            
-            if (NetworkManager.Singleton.IsServer)
-            {
-                NetworkManager.Singleton.OnServerStarted -= OnServerStarted;
-            }
-            
-            isSubscribed = false;
-        }
-
-        private void OnServerStarted()
-        {
-            Debug.Log("NetworkPlayerSpawner: Server started, ready to assign spawn positions.");
         }
 
         private void OnClientConnected(ulong clientId)
         {
-            Debug.Log($"NetworkPlayerSpawner: Client {clientId} connected. IsServer: {NetworkManager.Singleton.IsServer}");
+            Debug.Log($"NetworkPlayerSpawner: Client {clientId} bağlandı. Toplam: {NetworkManager.ConnectedClientsList.Count}");
             
-            if (!NetworkManager.Singleton.IsServer) return;
+            // Spawn pozisyonu ayır
+            int spawnIndex = AllocateSpawnIndex();
+            clientSpawnIndices[clientId] = spawnIndex;
             
-            int index = AllocateIndex();
-            clientSpawnIndices[clientId] = index;
-            Debug.Log($"NetworkPlayerSpawner: Allocated spawn index {index} for client {clientId}");
+            // Oyuncu prefab'ını belirle (ilk oyuncu playerPrefab, diğerleri clientPrefab)
+            GameObject prefabToSpawn = clientId == NetworkManager.ServerClientId ? playerPrefab : clientPrefab;
             
-            StartCoroutine(AssignWhenReady(clientId, index));
+            Debug.Log($"NetworkPlayerSpawner: Client {clientId} için {prefabToSpawn.name} spawn edilecek.");
+            
+            // Oyuncuyu spawn et
+            StartCoroutine(SpawnPlayerWithDelay(clientId, spawnIndex, prefabToSpawn));
+            
+            // Oyun başlatma kontrolü
+            CheckGameStart();
         }
 
         private void OnClientDisconnected(ulong clientId)
         {
-            if (!NetworkManager.Singleton.IsServer) return;
-            if (clientSpawnIndices.TryGetValue(clientId, out var idx))
+            Debug.Log($"NetworkPlayerSpawner: Client {clientId} ayrıldı.");
+            
+            if (clientSpawnIndices.ContainsKey(clientId))
             {
                 clientSpawnIndices.Remove(clientId);
-                Debug.Log($"NetworkPlayerSpawner: Client {clientId} disconnected, freed spawn index {idx}");
             }
+            
+            CheckGameStart();
         }
 
-        private int AllocateIndex()
+        private int AllocateSpawnIndex()
         {
             if (spawnPoints == null || spawnPoints.Length == 0) return 0;
-            int idx = nextIndex % spawnPoints.Length;
-            nextIndex++;
-            Debug.Log($"NetworkPlayerSpawner: Next spawn index will be {nextIndex}, assigned {idx}");
-            return idx;
+            
+            int index = nextSpawnIndex % spawnPoints.Length;
+            nextSpawnIndex++;
+            
+            Debug.Log($"NetworkPlayerSpawner: Spawn index {index} ayrıldı.");
+            return index;
         }
 
-        private IEnumerator AssignWhenReady(ulong clientId, int index)
+        private IEnumerator SpawnPlayerWithDelay(ulong clientId, int spawnIndex, GameObject prefab)
         {
-            Debug.Log($"NetworkPlayerSpawner: AssignWhenReady started for client {clientId}, index {index}");
-            
-            yield return new WaitForSecondsRealtime(0.2f); // Kısa bir gecikme ekle
-            
-            var tries = 0;
-            while (tries < 50)
+            // Hiç bekleme yapma - hemen spawn et
+            if (!NetworkManager.ConnectedClients.ContainsKey(clientId))
             {
-                if (NetworkManager.Singleton != null && 
-                    NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client) &&
-                    client.PlayerObject != null)
-                {
-                    var playerObj = client.PlayerObject;
-                    var pos = GetSpawnPosition(index);
-                    var rot = GetSpawnRotation(index);
-                    
-                    Debug.Log($"NetworkPlayerSpawner: Moving client {clientId} from {playerObj.transform.position} to {pos}");
-                    
-                    // PlayerSpawnSync bileşenini al
-                    var spawnSync = playerObj.GetComponent<PlayerSpawnSync>();
-                    
-                    if (spawnSync != null)
-                    {
-                        // ClientRpc ile tüm clientlara pozisyonu gönder
-                        spawnSync.TeleportClientRpc(pos, rot);
-                        Debug.Log($"NetworkPlayerSpawner: Called TeleportClientRpc for client {clientId}");
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"NetworkPlayerSpawner: PlayerSpawnSync component not found on client {clientId}! Add it to Player prefab.");
-                        
-                        // Fallback: Manuel pozisyon ayarla
-                        var characterController = playerObj.GetComponent<CharacterController>();
-                        var rb = playerObj.GetComponent<Rigidbody>();
-                        
-                        if (characterController != null)
-                        {
-                            characterController.enabled = false;
-                        }
-                        
-                        if (rb != null)
-                        {
-                            rb.linearVelocity = Vector3.zero;
-                            rb.angularVelocity = Vector3.zero;
-                        }
-                        
-                        playerObj.transform.position = pos;
-                        playerObj.transform.rotation = rot;
-                        
-                        yield return null;
-                        
-                        playerObj.transform.position = pos;
-                        playerObj.transform.rotation = rot;
-                        
-                        if (characterController != null)
-                        {
-                            characterController.enabled = true;
-                        }
-                    }
-                    
-                    Debug.Log($"NetworkPlayerSpawner: ✓ Client {clientId} successfully assigned to spawn index {index} at position {pos}");
-                    yield break;
-                }
-
-                tries++;
-                yield return new WaitForSecondsRealtime(0.1f);
+                Debug.LogWarning($"NetworkPlayerSpawner: Client {clientId} artık bağlı değil.");
+                yield break;
             }
-
-            Debug.LogError($"NetworkPlayerSpawner: PlayerObject for client {clientId} not found within timeout (5 seconds).");
+            
+            Debug.Log($"NetworkPlayerSpawner: Client {clientId} için spawn başlatılıyor...");
+            
+            // Prefab'ın NetworkObject component'ini kontrol et
+            NetworkObject prefabNetworkObject = prefab.GetComponent<NetworkObject>();
+            if (prefabNetworkObject == null)
+            {
+                Debug.LogError($"NetworkPlayerSpawner: {prefab.name} prefab'ında NetworkObject component yok!");
+                yield break;
+            }
+            
+            // Spawn pozisyonu ve rotasyonu
+            Vector3 spawnPos = GetSpawnPosition(spawnIndex);
+            Quaternion spawnRot = GetSpawnRotation(spawnIndex);
+            
+            // Prefab'ı spawn et
+            GameObject playerInstance = Instantiate(prefab, spawnPos, spawnRot);
+            NetworkObject networkObject = playerInstance.GetComponent<NetworkObject>();
+            
+            if (networkObject == null)
+            {
+                Debug.LogError($"NetworkPlayerSpawner: Instance'da NetworkObject bulunamadı!");
+                Destroy(playerInstance);
+                yield break;
+            }
+            
+            // Network'e spawn et ve ownership'i ata
+            try
+            {
+                Debug.Log($"NetworkPlayerSpawner: SpawnAsPlayerObject çağrılıyor - ClientId: {clientId}");
+                networkObject.SpawnAsPlayerObject(clientId, true);
+                Debug.Log($"NetworkPlayerSpawner: ✓ Client {clientId} için {prefab.name} spawn edildi. Pozisyon: {spawnPos}");
+                Debug.Log($"NetworkPlayerSpawner: Ownership - IsOwner: {networkObject.IsOwner}, OwnerClientId: {networkObject.OwnerClientId}");
+                
+                // Spawn sonrası kontrol
+                new WaitForSecondsRealtime(0.1f);
+                if (NetworkManager.ConnectedClients.TryGetValue(clientId, out var client) && client.PlayerObject != null)
+                {
+                    Debug.Log($"NetworkPlayerSpawner: ✓✓ Client {clientId} PlayerObject doğrulandı: {client.PlayerObject.name}");
+                }
+                else
+                {
+                    Debug.LogError($"NetworkPlayerSpawner: Client {clientId} PlayerObject atanamadı!");
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"NetworkPlayerSpawner: Spawn hatası: {e.Message}\n{e.StackTrace}");
+                Destroy(playerInstance);
+            }
         }
 
         private Vector3 GetSpawnPosition(int index)
         {
-            if (spawnPoints != null && spawnPoints.Length > 0)
+            if (spawnPoints == null || spawnPoints.Length == 0)
             {
-                index = Mathf.Clamp(index, 0, spawnPoints.Length - 1);
-                var pos = spawnPoints[index].position;
-                Debug.Log($"NetworkPlayerSpawner: GetSpawnPosition -> index {index} = position {pos}");
-                return pos;
+                Debug.LogWarning("NetworkPlayerSpawner: Spawn noktası yok, Vector3.zero kullanılıyor.");
+                return Vector3.zero;
             }
-
-            Debug.LogWarning("NetworkPlayerSpawner: No spawn points available, returning Vector3.zero");
-            return Vector3.zero;
+            
+            index = Mathf.Clamp(index, 0, spawnPoints.Length - 1);
+            return spawnPoints[index].position;
         }
 
         private Quaternion GetSpawnRotation(int index)
         {
-            if (spawnPoints != null && spawnPoints.Length > 0)
+            if (spawnPoints == null || spawnPoints.Length == 0)
             {
-                index = Mathf.Clamp(index, 0, spawnPoints.Length - 1);
-                return spawnPoints[index].rotation;
+                return Quaternion.identity;
             }
+            
+            index = Mathf.Clamp(index, 0, spawnPoints.Length - 1);
+            return spawnPoints[index].rotation;
+        }
 
-            return Quaternion.identity;
+        private void CheckGameStart()
+        {
+            if (networkCanvas == null) return;
+            
+            int connectedCount = NetworkManager.ConnectedClientsList.Count;
+            bool shouldStart = connectedCount >= minPlayers;
+            
+            if (shouldStart && !gameStarted)
+            {
+                gameStarted = true;
+                SetGameStateClientRpc(true);
+                Debug.Log("NetworkPlayerSpawner: Oyun başladı!");
+            }
+            else if (!shouldStart && gameStarted)
+            {
+                gameStarted = false;
+                SetGameStateClientRpc(false);
+                Debug.Log("NetworkPlayerSpawner: Yetersiz oyuncu, oyun duraklatıldı.");
+            }
+        }
+
+        [ClientRpc]
+        private void SetGameStateClientRpc(bool isPlaying)
+        {
+            if (networkCanvas != null)
+            {
+                networkCanvas.SetActive(!isPlaying);
+            }
+            
+            Time.timeScale = isPlaying ? 1f : 0f;
+            Debug.Log($"NetworkPlayerSpawner: Oyun durumu güncellendi. Oynuyor: {isPlaying}");
         }
     }
 }
