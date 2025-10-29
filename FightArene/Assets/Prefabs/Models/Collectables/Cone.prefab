@@ -180,4 +180,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Collectable
   ShowTopMostFoldoutHeaderGroup: 1
   type: 3
-  groundStayDuration: 3
+  groundStayDuration: 4

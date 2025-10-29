@@ -88,10 +88,14 @@ namespace Character
         {
             ulong clientId = rpcParams.Receive.SenderClientId;
             
+            Debug.Log($"[SERVER] SpawnArmorServerRpc called by ClientId: {clientId}");
+            
             if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var networkClient))
             {
                 if (networkClient.PlayerObject != null && networkClient.PlayerObject.TryGetComponent<Player>(out var targetPlayer))
                 {
+                    Debug.Log($"[SERVER] Found target player for ClientId {clientId}: {targetPlayer.gameObject.name}, NetworkObjectId: {targetPlayer.NetworkObjectId}");
+                    
                     if (targetPlayer._currentArmor != null)
                     {
                         NetworkObjectPool.Instance.Despawn(targetPlayer._currentArmor);
@@ -110,6 +114,8 @@ namespace Character
                         return;
                     }
 
+                    Debug.Log($"[SERVER] Armor spawned at position: {targetPlayer.armorHolder.position} for ClientId: {clientId}");
+
                     if (armorNetObj.TrySetParent(targetPlayer.transform))
                     {
                         targetPlayer._currentArmor = armorNetObj;
@@ -117,7 +123,7 @@ namespace Character
                         
                         targetPlayer.hasArmor.Value = false;
                         
-                        Debug.Log("Armor spawned and parented successfully!");
+                        Debug.Log($"[SERVER] Armor spawned and parented successfully to ClientId {clientId}'s player!");
                     }
                     else
                     {
@@ -125,6 +131,14 @@ namespace Character
                         NetworkObjectPool.Instance.Despawn(armorNetObj);
                     }
                 }
+                else
+                {
+                    Debug.LogError($"[SERVER] Could not find PlayerObject or Player component for ClientId: {clientId}");
+                }
+            }
+            else
+            {
+                Debug.LogError($"[SERVER] ClientId {clientId} not found in ConnectedClients!");
             }
         }
 
@@ -143,10 +157,14 @@ namespace Character
         {
             ulong clientId = rpcParams.Receive.SenderClientId;
             
+            Debug.Log($"[SERVER] SpawnMagnetServerRpc called by ClientId: {clientId}");
+            
             if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var networkClient))
             {
                 if (networkClient.PlayerObject != null && networkClient.PlayerObject.TryGetComponent<Player>(out var targetPlayer))
                 {
+                    Debug.Log($"[SERVER] Found target player for ClientId {clientId}: {targetPlayer.gameObject.name}, NetworkObjectId: {targetPlayer.NetworkObjectId}");
+                    
                     if (targetPlayer._currentMagnet != null)
                     {
                         NetworkObjectPool.Instance.Despawn(targetPlayer._currentMagnet);
@@ -165,6 +183,8 @@ namespace Character
                         return;
                     }
 
+                    Debug.Log($"[SERVER] Magnet spawned at position: {targetPlayer.magnetHolder.position} for ClientId: {clientId}");
+
                     if (magnetNetObj.TrySetParent(targetPlayer.transform))
                     {
                         targetPlayer._currentMagnet = magnetNetObj;
@@ -172,7 +192,7 @@ namespace Character
                         
                         targetPlayer.hasMagnet.Value = false;
                         
-                        Debug.Log("Magnet spawned and parented successfully!");
+                        Debug.Log($"[SERVER] Magnet spawned and parented successfully to ClientId {clientId}'s player!");
                     }
                     else
                     {
@@ -180,6 +200,14 @@ namespace Character
                         NetworkObjectPool.Instance.Despawn(magnetNetObj);
                     }
                 }
+                else
+                {
+                    Debug.LogError($"[SERVER] Could not find PlayerObject or Player component for ClientId: {clientId}");
+                }
+            }
+            else
+            {
+                Debug.LogError($"[SERVER] ClientId {clientId} not found in ConnectedClients!");
             }
         }
 

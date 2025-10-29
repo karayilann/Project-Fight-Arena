@@ -1023,7 +1023,6 @@ GameObject:
   - component: {fileID: 9154966111623436351}
   - component: {fileID: 77966404247120676}
   - component: {fileID: 994509519390886021}
-  - component: {fileID: 2543269981195601044}
   m_Layer: 7
   m_Name: Player 1
   m_TagString: Untagged
@@ -1066,7 +1065,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 4021179668
+  GlobalObjectIdHash: 1607126385
   InScenePlacedSourceGlobalObjectIdHash: 1607126385
   DeferredDespawnTick: 0
   Ownership: 1
@@ -1250,19 +1249,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &2543269981195601044
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6249512292532080302}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c4366fd79af4c02a97f66118c94a5c9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Network.PlayerSpawnSync
-  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!1 &6390815834008526982
 GameObject:
   m_ObjectHideFlags: 0

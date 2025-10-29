@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 7955469386098673601}
   - component: {fileID: 7661272712106383089}
   - component: {fileID: 1639709073247875488}
-  - component: {fileID: 1563108764096692858}
   - component: {fileID: 4089788252287410102}
   - component: {fileID: 3440696032244384272}
   m_Layer: 8
@@ -117,33 +116,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.02005015, y: 0.0059865816, z: 0.02563725}
   m_Center: {x: 0.000099315774, y: 0.0014347625, z: -0.0017897198}
---- !u!54 &1563108764096692858
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2964364694167628045}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 126
-  m_CollisionDetection: 0
 --- !u!114 &4089788252287410102
 MonoBehaviour:
   m_ObjectHideFlags: 0

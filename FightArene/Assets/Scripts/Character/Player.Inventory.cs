@@ -60,7 +60,7 @@ namespace Character
                 }
             }
 
-            netObj.Despawn(true);
+            netObj.Despawn(false);
         }
 
         private void OnDestroy()
