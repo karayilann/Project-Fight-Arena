@@ -7,6 +7,9 @@ namespace Character
     {
         private NetworkVariable<float> _health = new(100f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
         private NetworkVariable<bool> _isDead = new(false, NetworkVariableReadPermission.Everyone);
+        public AudioClip deathClip;
+        public AudioClip hitClip;
+        public AudioSource audioSource;
         
         public float Health
         {
@@ -31,6 +34,8 @@ namespace Character
             if (_isDead.Value) return;
 
             Health -= damage;
+            audioSource.clip = hitClip;
+            audioSource.Play();
             Debug.Log($"Player {OwnerClientId} took {damage} damage. Current Health: {Health}");
 
             if (Health <= 0)
@@ -43,6 +48,8 @@ namespace Character
         {
             if (!IsServer) return;
             
+            audioSource.clip = deathClip;
+            audioSource.Play();
             Debug.Log($"Player {OwnerClientId} has died.");
             _isDead.Value = true;
         }

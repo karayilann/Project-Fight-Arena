@@ -7,6 +7,7 @@ namespace Character
     public partial class Player
     {
         NetworkVariable<int> collectableCount = new NetworkVariable<int>(0);
+        public AudioClip collectClip;
 
         void InitInventory()
         {
@@ -47,7 +48,6 @@ namespace Character
                     {
                         targetPlayer.hasArmor.Value = true;
                         Debug.Log("Client " + clientId + " picked Armor. Despawning collectable...");
-                        // Pool sistemini kullanarak geri döndür
                         collectable.ReturnToPool();
                         return;
                     }
@@ -55,7 +55,6 @@ namespace Character
                     {
                         targetPlayer.hasMagnet.Value = true;
                         Debug.Log("Client " + clientId + " picked Magnet. Despawning collectable...");
-                        // Pool sistemini kullanarak geri döndür
                         collectable.ReturnToPool();
                         return;
                     }
@@ -65,8 +64,8 @@ namespace Character
                     }
                 }
             }
-
-            // Diğer collectable'lar için de pool'a geri dön
+            audioSource.clip = collectClip;
+            audioSource.Play();
             collectable.ReturnToPool();
         }
 

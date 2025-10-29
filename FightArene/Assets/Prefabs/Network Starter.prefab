@@ -47,7 +47,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7162949079350543869}
   - component: {fileID: 891464241866485699}
-  - component: {fileID: 7354385590792990440}
   - component: {fileID: 4335856970965920384}
   - component: {fileID: 3571586530531420978}
   m_Layer: 0
@@ -85,20 +84,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa304bdaf8556d24bb261684b7565894, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StartNetwork
-  networkCanvas: {fileID: 7091541089864966405}
---- !u!114 &7354385590792990440
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3087110926044291962}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 23d895cfabb0425388fda93b8ef8faed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Network.GameStartController
-  minPlayers: 1
   networkCanvas: {fileID: 7091541089864966405}
 --- !u!114 &4335856970965920384
 MonoBehaviour:

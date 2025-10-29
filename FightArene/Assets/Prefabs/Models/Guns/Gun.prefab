@@ -138,7 +138,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StandartGun
   gunSource: {fileID: -7417882321322274791}
-  fireSound: {fileID: 8300000, guid: 1d53b4a17257a2f4c846174cda40bb0f, type: 3}
+  fireSound: {fileID: 8300000, guid: c2d8f498e62111447ab489764166982f, type: 3}
   damage: 10
   range: 50
   firePoint: {fileID: 2144988228111760883}
@@ -175,8 +175,8 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 1d53b4a17257a2f4c846174cda40bb0f, type: 3}
-  m_PlayOnAwake: 1
+  m_Resource: {fileID: 8300000, guid: c2d8f498e62111447ab489764166982f, type: 3}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
