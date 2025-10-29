@@ -5,8 +5,8 @@ namespace Character
 {
     public partial class Player
     {
-        private NetworkVariable<float> _health = new(100f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-        private NetworkVariable<bool> _isDead = new(false, NetworkVariableReadPermission.Everyone);
+        private NetworkVariable<float> _health = new NetworkVariable<float>(100f);
+        private NetworkVariable<bool> _isDead = new NetworkVariable<bool>(false);
         public AudioClip deathClip;
         public AudioClip hitClip;
         public AudioSource audioSource;
@@ -19,7 +19,6 @@ namespace Character
                 if (IsServer)
                 {
                     _health.Value = Mathf.Clamp(value, 0f, 100f);
-                    _healthText.text = "Health: " + Mathf.RoundToInt(_health.Value);
                 }
             }
         }

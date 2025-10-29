@@ -76,16 +76,35 @@ namespace Character
             {
                 // Owner bilgisini bul
                 GameObject owner = null;
+                Player targetPlayer = null;
                 if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var networkClient))
                 {
-                    if (networkClient.PlayerObject != null)
+                    if (networkClient.PlayerObject != null && networkClient.PlayerObject.TryGetComponent<Player>(out var foundPlayer))
                     {
                         owner = networkClient.PlayerObject.gameObject;
+                        targetPlayer = foundPlayer;
                     }
                 }
-                
+
                 projectile.Initialize(spawnPos, targetPos, owner);
-                collectableCount.Value -= 1;
+
+                if (targetPlayer != null)
+                {
+                    if (targetPlayer.collectableCount.Value > 0)
+                    {
+                        targetPlayer.collectableCount.Value -= 1;
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Player {clientId} tried to throw but has no collectables.");
+                    }
+                }
+                else
+                {
+                    // Fallback: eğer targetPlayer bulunamadıysa, yerel collectableCount'ı değiştirmeyiz
+                    Debug.LogWarning("Could not find server-side Player instance to decrement collectableCount for clientId: " + clientId);
+                }
+
                 Debug.Log($"Projectile spawned from pool and initialized with owner: {(owner != null ? owner.name : "None")}");
             }
             else
@@ -246,6 +265,11 @@ namespace Character
         
         private void HandleFire()
         {
+            if(collectableCount.Value <= 0)
+            {
+                Debug.LogWarning("No collectables available to throw!");
+                return;
+            }
             PlayThrowAnimation();
             Debug.Log("HandleFire called - Animation started.");
         }
@@ -254,11 +278,6 @@ namespace Character
         {
             if (_currentGun != null)
             {
-                if(collectableCount.Value <= 0)
-                {
-                    Debug.LogWarning("No collectables available to throw!");
-                    return;
-                }
                 _currentGun.Fire();
                 Debug.Log("Player: OnThrowReleasePoint called - Projectile spawned at frame 23!");
             }

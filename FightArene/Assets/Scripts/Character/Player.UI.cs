@@ -24,7 +24,10 @@ namespace Character
                 _crosshair.enabled = true;
                 _ammoText.enabled = true;
                 _healthText.enabled = true;
+
                 _healthText.text = "Health: " + Mathf.RoundToInt(_health.Value);
+
+                _health.OnValueChanged += OnHealthChanged;
             }
             else
             {
@@ -41,6 +44,16 @@ namespace Character
                 isCrosshairEnabled = true;
             }
         }
+
+        private void OnHealthChanged(float previous, float current)
+        {
+            if (!IsOwner) return;
+            if (_healthText != null)
+            {
+                _healthText.text = "Health: " + Mathf.RoundToInt(current);
+            }
+        }
+        
 
         public void EnableCursor()
         {

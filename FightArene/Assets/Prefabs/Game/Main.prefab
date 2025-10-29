@@ -916,8 +916,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerRequirements
   crosshair: {fileID: 1686423178440999777}
-  ammoText: {fileID: 0}
-  healthText: {fileID: 0}
+  ammoText: {fileID: 7826073139116378916}
+  healthText: {fileID: 7964370596951614973}
   armorImage: {fileID: 4032189725125800547}
   armorTimer: {fileID: 3776923910167848049}
   armorBackground: {fileID: 9007136364925962529}

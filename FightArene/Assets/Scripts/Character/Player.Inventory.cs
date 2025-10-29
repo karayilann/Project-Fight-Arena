@@ -7,7 +7,7 @@ namespace Character
 {
     public partial class Player
     {
-        NetworkVariable<int> collectableCount = new NetworkVariable<int>(0);
+        public NetworkVariable<int> collectableCount = new NetworkVariable<int>(0);
         public AudioClip collectClip;
         public List<PoolObjectType> collectableTypes;
 
@@ -20,7 +20,11 @@ namespace Character
 
         private void OnCollectableCountChanged(int previous, int current)
         {
-            _ammoText.text = "Ammo: " + current;
+            if (!IsOwner) return;
+            if (_ammoText != null)
+            {
+                _ammoText.text = "Ammo: " + current;
+            }
         }
 
         private void OnCollisionEnter(Collision other)
@@ -77,6 +81,7 @@ namespace Character
         private void OnDestroy()
         {
             collectableCount.OnValueChanged -= OnCollectableCountChanged;
+            _health.OnValueChanged -= OnHealthChanged;
         }
     }
 }

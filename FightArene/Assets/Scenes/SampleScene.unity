@@ -305,17 +305,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3899520030807063256, guid: 299e7a1cb6456cf4fa6079cf5978df9b, type: 3}
   m_PrefabInstance: {fileID: 2984434}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4750035 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7964370596951614973, guid: dd0fd3216a18cbf4c8b6206f3c7be768, type: 3}
-  m_PrefabInstance: {fileID: 487786674}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &4983631
 GameObject:
   m_ObjectHideFlags: 0
@@ -11729,6 +11718,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3966202996437043926, guid: dd0fd3216a18cbf4c8b6206f3c7be768, type: 3}
+      propertyPath: spawnPoints.Array.data[2].pointActiveChance
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3966202996437043926, guid: dd0fd3216a18cbf4c8b6206f3c7be768, type: 3}
       propertyPath: spawnPoints.Array.data[3].pointActiveChance
       value: 1
       objectReference: {fileID: 0}
@@ -11755,6 +11748,14 @@ PrefabInstance:
     - target: {fileID: 3966202996437043926, guid: dd0fd3216a18cbf4c8b6206f3c7be768, type: 3}
       propertyPath: spawnPoints.Array.data[4].spawnableObjects.Array.data[0].objectType
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3966202996437043926, guid: dd0fd3216a18cbf4c8b6206f3c7be768, type: 3}
+      propertyPath: spawnPoints.Array.data[2].spawnableObjects.Array.data[0].spawnChance
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3966202996437043926, guid: dd0fd3216a18cbf4c8b6206f3c7be768, type: 3}
+      propertyPath: spawnPoints.Array.data[2].spawnableObjects.Array.data[1].spawnChance
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3966202996437043926, guid: dd0fd3216a18cbf4c8b6206f3c7be768, type: 3}
       propertyPath: spawnPoints.Array.data[3].spawnableObjects.Array.data[0].spawnChance
@@ -11784,14 +11785,6 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 1491046822
       objectReference: {fileID: 0}
-    - target: {fileID: 9188120615378419410, guid: dd0fd3216a18cbf4c8b6206f3c7be768, type: 3}
-      propertyPath: ammoText
-      value: 
-      objectReference: {fileID: 651189314}
-    - target: {fileID: 9188120615378419410, guid: dd0fd3216a18cbf4c8b6206f3c7be768, type: 3}
-      propertyPath: healthText
-      value: 
-      objectReference: {fileID: 4750035}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -16099,17 +16092,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 38335279662569219, guid: 34d3f526198dae440bb2ce6005d86055, type: 3}
   m_PrefabInstance: {fileID: 650834482}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &651189314 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7826073139116378916, guid: dd0fd3216a18cbf4c8b6206f3c7be768, type: 3}
-  m_PrefabInstance: {fileID: 487786674}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1001 &654573076
 PrefabInstance:
   m_ObjectHideFlags: 0
