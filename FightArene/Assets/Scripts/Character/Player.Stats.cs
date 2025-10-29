@@ -19,6 +19,7 @@ namespace Character
                 if (IsServer)
                 {
                     _health.Value = Mathf.Clamp(value, 0f, 100f);
+                    _healthText.text = "Health: " + Mathf.RoundToInt(_health.Value);
                 }
             }
         }

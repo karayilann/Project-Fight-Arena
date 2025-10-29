@@ -20,6 +20,7 @@ namespace Character
 
         private void OnCollectableCountChanged(int previous, int current)
         {
+            _ammoText.text = "Ammo: " + current;
         }
 
         private void OnCollisionEnter(Collision other)

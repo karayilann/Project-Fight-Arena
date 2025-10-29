@@ -85,6 +85,7 @@ namespace Character
                 }
                 
                 projectile.Initialize(spawnPos, targetPos, owner);
+                collectableCount.Value -= 1;
                 Debug.Log($"Projectile spawned from pool and initialized with owner: {(owner != null ? owner.name : "None")}");
             }
             else
@@ -253,6 +254,11 @@ namespace Character
         {
             if (_currentGun != null)
             {
+                if(collectableCount.Value <= 0)
+                {
+                    Debug.LogWarning("No collectables available to throw!");
+                    return;
+                }
                 _currentGun.Fire();
                 Debug.Log("Player: OnThrowReleasePoint called - Projectile spawned at frame 23!");
             }

@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,16 +8,23 @@ namespace Character
     {
        
         [Header("UI")]
-        private Image _crosshair;
-
+        [SerializeField] private Image _crosshair;
+        [SerializeField] private TextMeshProUGUI _ammoText;
+        [SerializeField] private TextMeshProUGUI _healthText;
         private bool isCrosshairEnabled;
         
         private void InitUI()
         {
-            // UI referanslarını cache'le
             if (PlayerRequirements.Instance != null)
             {
                 _crosshair = PlayerRequirements.Instance.crosshair;
+                _ammoText = PlayerRequirements.Instance.ammoText;
+                _healthText = PlayerRequirements.Instance.healthText;
+
+                _crosshair.enabled = true;
+                _ammoText.enabled = true;
+                _healthText.enabled = true;
+                _healthText.text = "Health: " + Mathf.RoundToInt(_health.Value);
             }
             else
             {
