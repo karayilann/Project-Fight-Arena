@@ -28,6 +28,7 @@ namespace Network
         public GameObject networkCanvas;
         
         private readonly Dictionary<ulong, int> clientSpawnIndices = new Dictionary<ulong, int>();
+        private readonly HashSet<ulong> spawnedClients = new HashSet<ulong>(); // Çift spawn kontrolü
         private int nextSpawnIndex;
         private bool gameStarted;
 
@@ -36,7 +37,6 @@ namespace Network
             ValidateReferences();
             
             // Sadece server Time.timeScale'i kontrol eder
-            // Client'lar ServerRpc'den gelecek komutu bekler
             if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsListening)
             {
                 Time.timeScale = 0f;
@@ -127,12 +127,16 @@ namespace Network
             
             Debug.Log("NetworkPlayerSpawner: Server aktif, event listener'lar eklendi.");
             
-            // HOST için player spawn et (ClientId 0)
+            // *** DÜZELTİLDİ: Manuel host spawn çağrısı KALDIRILDI ***
+            // OnClientConnectedCallback zaten host için otomatik tetiklenir
+            // Bu satırları yoruma alın veya silin:
+            /*
             if (NetworkManager.IsHost)
             {
                 Debug.Log("NetworkPlayerSpawner: Host spawn ediliyor...");
                 OnClientConnected(NetworkManager.ServerClientId);
             }
+            */
         }
 
         public override void OnNetworkDespawn()
@@ -155,16 +159,27 @@ namespace Network
 
         private void OnClientConnected(ulong clientId)
         {
+            // *** DÜZELTİLDİ: Çift spawn kontrolü eklendi ***
+            if (spawnedClients.Contains(clientId))
+            {
+                Debug.LogWarning($"NetworkPlayerSpawner: Client {clientId} zaten spawn edilmiş, atlanıyor.");
+                return;
+            }
+            
             Debug.Log($"NetworkPlayerSpawner: Client {clientId} bağlandı. Toplam: {NetworkManager.ConnectedClientsList.Count}");
             
             // Spawn pozisyonu ayır
             int spawnIndex = AllocateSpawnIndex();
             clientSpawnIndices[clientId] = spawnIndex;
             
-            // Oyuncu prefab'ını belirle (ilk oyuncu playerPrefab, diğerleri clientPrefab)
-            GameObject prefabToSpawn = clientId == NetworkManager.ServerClientId ? playerPrefab : clientPrefab;
+            // *** DÜZELTİLDİ: Host kontrolü için ServerClientId yerine 0 karşılaştırması ***
+            // Host her zaman ClientId = 0'dır
+            GameObject prefabToSpawn = (clientId == 0) ? playerPrefab : clientPrefab;
             
             Debug.Log($"NetworkPlayerSpawner: Client {clientId} için {prefabToSpawn.name} spawn edilecek.");
+            
+            // Spawned listesine ekle
+            spawnedClients.Add(clientId);
             
             // Oyuncuyu spawn et
             StartCoroutine(SpawnPlayerWithDelay(clientId, spawnIndex, prefabToSpawn));
@@ -181,6 +196,9 @@ namespace Network
             {
                 clientSpawnIndices.Remove(clientId);
             }
+            
+            // Spawned listesinden çıkar
+            spawnedClients.Remove(clientId);
             
             CheckGameStart();
         }
@@ -202,6 +220,7 @@ namespace Network
             if (!NetworkManager.ConnectedClients.ContainsKey(clientId))
             {
                 Debug.LogWarning($"NetworkPlayerSpawner: Client {clientId} artık bağlı değil.");
+                spawnedClients.Remove(clientId); // Listeden çıkar
                 yield break;
             }
             
@@ -212,6 +231,7 @@ namespace Network
             if (prefabNetworkObject == null)
             {
                 Debug.LogError($"NetworkPlayerSpawner: {prefab.name} prefab'ında NetworkObject component yok!");
+                spawnedClients.Remove(clientId); // Listeden çıkar
                 yield break;
             }
             
@@ -227,6 +247,7 @@ namespace Network
             {
                 Debug.LogError($"NetworkPlayerSpawner: Instance'da NetworkObject bulunamadı!");
                 Destroy(playerInstance);
+                spawnedClients.Remove(clientId); // Listeden çıkar
                 yield break;
             }
             
@@ -253,6 +274,7 @@ namespace Network
             {
                 Debug.LogError($"NetworkPlayerSpawner: Spawn hatası: {e.Message}\n{e.StackTrace}");
                 Destroy(playerInstance);
+                spawnedClients.Remove(clientId); // Hata durumunda listeden çıkar
             }
         }
 

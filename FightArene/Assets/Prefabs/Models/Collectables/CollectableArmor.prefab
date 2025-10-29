@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1639709073247875488}
   - component: {fileID: 4089788252287410102}
   - component: {fileID: 3440696032244384272}
+  - component: {fileID: 5481566675582173298}
   m_Layer: 8
   m_Name: CollectableArmor
   m_TagString: Untagged
@@ -29,13 +30,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2964364694167628045}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7071069, y: -0, z: -0, w: 0.7071067}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 2.18, y: 1.57, z: 1.76}
   m_LocalScale: {x: 26.1, y: 26.1, z: 26.1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!33 &7955469386098673601
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -114,8 +115,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.02005015, y: 0.0059865816, z: 0.02563725}
-  m_Center: {x: 0.000099315774, y: 0.0014347625, z: -0.0017897198}
+  m_Size: {x: 0.02005015, y: 0.009663995, z: 0.025637247}
+  m_Center: {x: 0.00009931595, y: 0.0012150146, z: -0.0017897196}
 --- !u!114 &4089788252287410102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,8 +129,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3774745383
-  InScenePlacedSourceGlobalObjectIdHash: 297740294
+  GlobalObjectIdHash: 1944552963
+  InScenePlacedSourceGlobalObjectIdHash: 3774745383
   DeferredDespawnTick: 0
   Ownership: 1
   AlwaysReplicateAsRoot: 0
@@ -156,3 +157,30 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   type: 5
   groundStayDuration: 2
+--- !u!54 &5481566675582173298
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2964364694167628045}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
