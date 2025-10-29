@@ -47,12 +47,23 @@ namespace Character
         public void SpawnProjectileServerRpc(Vector3 spawnPos, Vector3 targetPos, ServerRpcParams rpcParams = default)
         {
             ulong clientId = rpcParams.Receive.SenderClientId;
-            
-            NetworkObject projectileNetObj = NetworkObjectPool.Instance.Spawn(
-                PoolObjectType.Projectile,
-                spawnPos,
-                Quaternion.identity
-            );
+            NetworkObject projectileNetObj;
+            if (clientId == 0)
+            {
+                projectileNetObj = NetworkObjectPool.Instance.Spawn(
+                    PoolObjectType.Projectile,
+                    spawnPos,
+                    Quaternion.identity
+                );
+            }
+            else
+            {
+                projectileNetObj = NetworkObjectPool.Instance.Spawn(
+                    PoolObjectType.Projectile2,
+                    spawnPos,
+                    Quaternion.identity
+                );
+            }
             
             if (projectileNetObj == null)
             {

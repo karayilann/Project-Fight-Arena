@@ -863,6 +863,11 @@ MonoBehaviour:
     initialSize: 3
     maxSize: 100
     autoExpand: 1
+  - type: 8
+    prefab: {fileID: 135443001273883882, guid: 62fe1b0a0bb3f9944b47345ed5a0a466, type: 3}
+    initialSize: 3
+    maxSize: 100
+    autoExpand: 1
 --- !u!114 &3966202996437043926
 MonoBehaviour:
   m_ObjectHideFlags: 0

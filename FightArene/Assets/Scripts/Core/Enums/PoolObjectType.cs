@@ -9,5 +9,6 @@ public enum PoolObjectType
     Magnet,
     Armor,
     CollectableMagnet,
-    CollectableArmor
+    CollectableArmor,
+    Projectile2,
 }
