@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 1639709073247875488}
   - component: {fileID: 4089788252287410102}
   - component: {fileID: 3440696032244384272}
-  - component: {fileID: 5481566675582173298}
-  m_Layer: 8
+  - component: {fileID: 1407113468977641238}
+  m_Layer: 0
   m_Name: CollectableArmor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -129,7 +129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1944552963
+  GlobalObjectIdHash: 3774745383
   InScenePlacedSourceGlobalObjectIdHash: 3774745383
   DeferredDespawnTick: 0
   Ownership: 1
@@ -156,8 +156,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Collectable
   ShowTopMostFoldoutHeaderGroup: 1
   type: 5
-  groundStayDuration: 2
---- !u!54 &5481566675582173298
+  groundStayDuration: 3
+--- !u!54 &1407113468977641238
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -183,4 +183,4 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1

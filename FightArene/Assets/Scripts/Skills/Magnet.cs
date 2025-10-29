@@ -4,6 +4,6 @@ namespace Skills
 {
     public class Magnet : NetworkBehaviour
     {
-        
+
     }
 }

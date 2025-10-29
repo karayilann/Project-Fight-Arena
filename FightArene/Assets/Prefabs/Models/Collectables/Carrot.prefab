@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3454652891027991730}
   - component: {fileID: 270570403400024237}
   - component: {fileID: 3898187162511544023}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Carrot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -113,7 +113,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.48
+  m_Radius: 0.57
   m_Height: 4.22
   m_Direction: 2
   m_Center: {x: -0.049963504, y: -0.08122835, z: 0.8397641}
@@ -156,7 +156,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Collectable
   ShowTopMostFoldoutHeaderGroup: 1
   type: 1
-  groundStayDuration: 4
+  groundStayDuration: 2
 --- !u!54 &3898187162511544023
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -183,4 +183,4 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1

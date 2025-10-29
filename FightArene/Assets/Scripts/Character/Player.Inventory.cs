@@ -46,12 +46,18 @@ namespace Character
                     if (collectable.type == PoolObjectType.Armor)
                     {
                         targetPlayer.hasArmor.Value = true;
-                        Debug.Log("Client " + clientId + " picked Armor.");
+                        Debug.Log("Client " + clientId + " picked Armor. Despawning collectable...");
+                        // Pool sistemini kullanarak geri döndür
+                        collectable.ReturnToPool();
+                        return;
                     }
                     else if (collectable.type == PoolObjectType.Magnet)
                     {
                         targetPlayer.hasMagnet.Value = true;
-                        Debug.Log("Client " + clientId + " picked Magnet.");
+                        Debug.Log("Client " + clientId + " picked Magnet. Despawning collectable...");
+                        // Pool sistemini kullanarak geri döndür
+                        collectable.ReturnToPool();
+                        return;
                     }
                     else
                     {
@@ -60,7 +66,8 @@ namespace Character
                 }
             }
 
-            netObj.Despawn(false);
+            // Diğer collectable'lar için de pool'a geri dön
+            collectable.ReturnToPool();
         }
 
         private void OnDestroy()

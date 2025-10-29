@@ -100,7 +100,7 @@ Transform:
   m_GameObject: {fileID: 734825769319163331}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.6, y: 5.46, z: 0}
+  m_LocalPosition: {x: 11.82, y: 4.25, z: -1.13}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -796,7 +796,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1491046822
+  GlobalObjectIdHash: 3653602366
   InScenePlacedSourceGlobalObjectIdHash: 2487643428
   DeferredDespawnTick: 0
   Ownership: 1
@@ -858,6 +858,11 @@ MonoBehaviour:
     initialSize: 3
     maxSize: 100
     autoExpand: 1
+  - type: 1
+    prefab: {fileID: 9058343435341311478, guid: 76639d96b226b7548a45775603e43fa3, type: 3}
+    initialSize: 3
+    maxSize: 100
+    autoExpand: 1
 --- !u!114 &3966202996437043926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -875,7 +880,7 @@ MonoBehaviour:
   - transform: {fileID: 8974397891914232328}
     radius: 0.5
     spawnableObjects:
-    - objectType: 3
+    - objectType: 1
       spawnChance: 100
       randomRotation: 1
     pointActiveChance: 1

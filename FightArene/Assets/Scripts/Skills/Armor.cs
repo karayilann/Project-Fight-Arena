@@ -32,7 +32,7 @@ public class Armor : NetworkBehaviour, IDamageable
             _isDestroying = false;
             
             StartAutoDestroyTimer().Forget();
-            
+
             Debug.Log($"Armor spawned! Lifetime: {lifetime}s, Health: {health.Value}");
         }
     }
