@@ -1,6 +1,6 @@
 Project Fight Arena - README
 
-English
+English (Turkish explanation below :))
 -------
 
 Overview
