@@ -11785,6 +11785,22 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 1491046822
       objectReference: {fileID: 0}
+    - target: {fileID: 7476808154323764261, guid: dd0fd3216a18cbf4c8b6206f3c7be768, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 9.82
+      objectReference: {fileID: 0}
+    - target: {fileID: 7476808154323764261, guid: dd0fd3216a18cbf4c8b6206f3c7be768, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.58
+      objectReference: {fileID: 0}
+    - target: {fileID: 8974397891914232328, guid: dd0fd3216a18cbf4c8b6206f3c7be768, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -14.58
+      objectReference: {fileID: 0}
+    - target: {fileID: 8974397891914232328, guid: dd0fd3216a18cbf4c8b6206f3c7be768, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.94
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15591,7 +15607,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Transports.UTP.UnityTransport
   m_ProtocolType: 0
-  m_UseWebSockets: 1
+  m_UseWebSockets: 0
   m_UseEncryption: 0
   m_MaxPacketQueueSize: 128
   m_MaxPayloadSize: 6144
@@ -15600,7 +15616,7 @@ MonoBehaviour:
   m_MaxConnectAttempts: 60
   m_DisconnectTimeoutMS: 30000
   ConnectionData:
-    Address: 127.0.0.1
+    Address: 25.6.223.106
     Port: 7777
     ServerListenAddress: 0.0.0.0
   DebugSimulator:
