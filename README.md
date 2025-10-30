@@ -142,11 +142,3 @@ Useful links / Faydalı linkler
 - Repo: https://github.com/karayilann/Project-Fight-Arena
 - Assets: https://github.com/karayilann/Project-Fight-Arena/tree/main/FightArene/Assets
 
-
----
-Generated README added to repository root. If you want, I can also:
-- Add a short CONTRIBUTING.md or a DeveloperNotes.md with concrete code pointers and example snippets for the magnet implementation.
-- Modify or add a short example Magnet implementation (server-authoritative) that uses Physics.OverlapSphere + LayerMask and ServerRpc pickups.
-
-Let me know if you want that follow-up.
-
