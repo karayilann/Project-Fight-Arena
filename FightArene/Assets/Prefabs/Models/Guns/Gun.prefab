@@ -138,7 +138,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StandartGun
   gunSource: {fileID: -7417882321322274791}
-  fireSound: {fileID: 8300000, guid: c2d8f498e62111447ab489764166982f, type: 3}
+  fireSound: {fileID: 8300000, guid: 36ecb5d73cfe27a4c92aab20cece70e1, type: 3}
   damage: 10
   range: 50
   firePoint: {fileID: 2144988228111760883}
@@ -273,7 +273,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2759111924
+  GlobalObjectIdHash: 2102404555
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
