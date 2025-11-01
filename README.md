@@ -5,7 +5,7 @@ English (Turkish explanation below :))
 
 Overview
 
-Project Fight Arena is a small, host-based LAN multiplayer arena shooter built with Unity and Unity Netcode (Netcode for GameObjects). The game uses a host-authoritative model where one instance acts as server (host) and others connect as clients. The core gameplay revolves around collecting items, using skills (like magnet and armor), and fighting other players in short arena rounds.
+Project Fight Arena is a small, host-based LAN multiplayer arena shooter built with Unity and Unity Netcode (Netcode for GameObjects). The game uses a host-authoritative model where one instance acts as server (host) and others connect as clients. The core gameplay revolves around collecting items, using skills (like magnet and armor), and fighting other players in short arena rounds. This game was made in 1 week as a weekly project at the university.
 
 How to play
 
@@ -78,7 +78,7 @@ Turkish (Türkçe)
 
 Genel Bakış
 
-Project Fight Arena, Unity ve Unity Netcode ile yazılmış, host-tabanlı bir LAN çok oyunculu arena nişancı oyunudur. Oyun host-authoritative modelini kullanır: bir oyun örneği sunucu (host) olarak davranır, diğerleri istemci olarak bağlanır. Oyunun ana oynanışı, nesneleri toplamak, yetenekler (magnet, armor vb.) kullanmak ve kısa arena maçlarında diğer oyuncularla savaşmaktır.
+Project Fight Arena, Unity ve Unity Netcode ile yazılmış, host-tabanlı bir LAN çok oyunculu arena nişancı oyunudur. Oyun host-authoritative modelini kullanır: bir oyun örneği sunucu (host) olarak davranır, diğerleri istemci olarak bağlanır. Oyunun ana oynanışı, nesneleri toplamak, yetenekler (magnet, armor vb.) kullanmak ve kısa arena maçlarında diğer oyuncularla savaşmaktır. Bu oyun üniversitede haftalık oyun projesi olarak 1 haftada yapılmıştır
 
 Nasıl oynanır
 
