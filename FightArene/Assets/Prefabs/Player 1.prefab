@@ -1104,7 +1104,7 @@ MonoBehaviour:
   jumpForce: 10
   gravity: 20
   rotationSpeed: 10
-  lookSensitivity: 5
+  lookSensitivity: 15
   verticalLookLimit: 20
   horizontalLookLimit: 360
   groundCheckDistance: 0.1
@@ -1113,6 +1113,8 @@ MonoBehaviour:
     m_Bits: 64
   inputHandler: {fileID: 325872207356626516}
   characterController: {fileID: 4421202925367876875}
+  collectableCount:
+    m_InternalValue: 0
   collectClip: {fileID: 8300000, guid: 416f4b63ae4cfa245909172715f21c95, type: 3}
   collectableTypes: 02000000030000000600000007000000
   hasArmor:
@@ -1122,6 +1124,9 @@ MonoBehaviour:
   deathClip: {fileID: 8300000, guid: 6a364ac4c2a6d114fafc752615d3922c, type: 3}
   hitClip: {fileID: 8300000, guid: 05b46d35dabf8b146928ccbf08355495, type: 3}
   audioSource: {fileID: 8120205306035623215}
+  _crosshair: {fileID: 0}
+  _ammoText: {fileID: 0}
+  _healthText: {fileID: 0}
 --- !u!114 &325872207356626516
 MonoBehaviour:
   m_ObjectHideFlags: 0
